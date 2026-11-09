@@ -58,6 +58,36 @@ describe('ScenarioSwitcher', () => {
     expect(toggle).toHaveFocus();
   });
 
+  it('stays open while you use it, and closes when you click elsewhere', async () => {
+    const user = userEvent.setup();
+    renderWithStore(<App />);
+    const toggle = screen.getByRole('button', { name: /Demo scenarios/ });
+
+    await user.click(toggle);
+    await user.click(screen.getByRole('radio', { name: 'Slow' }));
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    await user.click(screen.getByRole('heading', { level: 1 }));
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('closes when keyboard focus moves out of it', async () => {
+    const user = userEvent.setup();
+    renderWithStore(<App />);
+    await screen.findByRole('group', { name: GROUP_NAME });
+    const toggle = screen.getByRole('button', { name: /Demo scenarios/ });
+
+    await user.click(toggle);
+    // Tab through the panel: the radio group, then "Reload countries", then out.
+    await user.tab();
+    await user.tab();
+    expect(screen.getByRole('button', { name: 'Reload countries' })).toHaveFocus();
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    await user.tab();
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  });
+
   it('clears loaded data, so the next comparison uses the new scenario', async () => {
     const user = userEvent.setup();
     renderWithStore(<App />);

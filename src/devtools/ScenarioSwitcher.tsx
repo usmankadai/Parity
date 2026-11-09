@@ -21,18 +21,34 @@ export function ScenarioSwitcher() {
   const toggleRef = useRef<HTMLButtonElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // While open, the dropdown closes on Escape (focus returns to its button),
+  // on a click or tap outside it, and when keyboard focus moves outside it.
   useEffect(() => {
     if (!open) return;
+
+    const isInside = (target: EventTarget | null) =>
+      target instanceof Node && (containerRef.current?.contains(target) ?? false);
+
     function handleKeyDown(event: KeyboardEvent) {
-      const focusInside = containerRef.current?.contains(document.activeElement) ?? false;
-      if (event.key === 'Escape' && focusInside) {
+      if (event.key === 'Escape' && isInside(document.activeElement)) {
         setOpen(false);
         toggleRef.current?.focus();
       }
     }
+    function handlePointerDown(event: PointerEvent) {
+      if (!isInside(event.target)) setOpen(false);
+    }
+    function handleFocusIn(event: FocusEvent) {
+      if (!isInside(event.target)) setOpen(false);
+    }
+
     document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('focusin', handleFocusIn);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('focusin', handleFocusIn);
     };
   }, [open]);
 
