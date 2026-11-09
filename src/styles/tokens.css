@@ -8,6 +8,9 @@
   --colour-accent: #b45309;
   --colour-accent-ink: #ffffff;
   --colour-focus: #1d4ed8;
+  --colour-error: #b42318;
+  --colour-best: #166534;
+  --colour-worst: #9a3412;
 
   --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-size-body: 1rem;

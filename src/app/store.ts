@@ -1,11 +1,15 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
 import type { ApiMode } from './apiMode';
+import { comparisonSlice } from '../features/comparison/slice';
+import { countriesSlice } from '../features/countries/slice';
 import { appSlice } from './appSlice';
 import { rootSaga } from './rootSaga';
 
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   [appSlice.name]: appSlice.reducer,
+  [countriesSlice.name]: countriesSlice.reducer,
+  [comparisonSlice.name]: comparisonSlice.reducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

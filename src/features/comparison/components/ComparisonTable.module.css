@@ -1,0 +1,63 @@
+.scroller {
+  overflow-x: auto;
+  border: 1px solid var(--colour-border);
+  border-radius: var(--radius);
+}
+
+.scroller:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.caption {
+  text-align: left;
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--colour-border);
+}
+
+.captionTitle {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.captionNote {
+  display: block;
+  font-size: var(--font-size-small);
+  color: var(--colour-ink-muted);
+}
+
+.corner,
+.columnHeader {
+  text-align: left;
+  padding: var(--space-3);
+  background: var(--colour-surface-sunken);
+  border-bottom: 2px solid var(--colour-ink);
+}
+
+.rowHeader {
+  text-align: left;
+  vertical-align: top;
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--colour-border);
+  background: var(--colour-surface-sunken);
+  min-width: 11rem;
+  max-width: 16rem;
+}
+
+.categoryLabel {
+  display: block;
+}
+
+.rankingNote {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--font-size-small);
+  font-weight: 400;
+  color: var(--colour-ink-muted);
+}

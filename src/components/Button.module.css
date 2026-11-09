@@ -1,0 +1,28 @@
+.button {
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.2;
+  min-height: 2.75rem;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius);
+  border: 2px solid var(--colour-ink);
+  cursor: pointer;
+}
+
+.primary {
+  background: var(--colour-ink);
+  color: var(--colour-surface);
+}
+
+.primary:hover {
+  background: #22335c;
+}
+
+.secondary {
+  background: var(--colour-surface);
+  color: var(--colour-ink);
+}
+
+.secondary:hover {
+  background: var(--colour-surface-sunken);
+}

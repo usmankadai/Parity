@@ -1,9 +1,11 @@
-import { all } from 'redux-saga/effects';
+import { all, fork } from 'redux-saga/effects';
+import { comparisonSaga } from '../features/comparison/sagas';
+import { countriesSaga } from '../features/countries/sagas';
 
 /**
- * Starts every feature saga. Each feature adds its watcher here with fork(),
- * so one failing watcher does not stop the others from starting.
+ * Starts every feature saga. Each watcher runs in its own fork, so they all
+ * start together and one feature's watcher does not wait on another's.
  */
 export function* rootSaga() {
-  yield all([]);
+  yield all([fork(countriesSaga), fork(comparisonSaga)]);
 }

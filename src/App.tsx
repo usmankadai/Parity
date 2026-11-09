@@ -1,12 +1,21 @@
-import { useAppSelector } from './app/hooks';
+import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from './app/hooks';
 import { selectApiMode } from './app/selectors';
+import { ComparisonSection } from './features/comparison/components/ComparisonSection';
+import { CountryPicker } from './features/countries/components/CountryPicker';
+import { countriesActions } from './features/countries/slice';
 import styles from './App.module.css';
 
 export const DISCLAIMER =
   'Independent portfolio project, inspired by reward comparison tools. Not affiliated with or endorsed by Benifex. Illustrative data, not legal or HR advice.';
 
 export function App() {
+  const dispatch = useAppDispatch();
   const apiMode = useAppSelector(selectApiMode);
+
+  useEffect(() => {
+    dispatch(countriesActions.loadRequested());
+  }, [dispatch]);
 
   return (
     <>
@@ -22,9 +31,12 @@ export function App() {
           <h1 className={styles.title}>Compare statutory benefits across countries</h1>
           <p className={styles.lead}>
             See the legal minimums for leave, pay and pensions side by side in the United Kingdom,
-            Ireland, Germany and the Netherlands, then check your own package against them.
+            Ireland, Germany and the Netherlands. Every figure links to its official source.
           </p>
           <p className={styles.notice}>{DISCLAIMER}</p>
+
+          <CountryPicker />
+          <ComparisonSection />
         </div>
       </main>
 

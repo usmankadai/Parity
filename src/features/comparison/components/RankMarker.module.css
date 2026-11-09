@@ -1,0 +1,22 @@
+.marker {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--font-size-small);
+  font-weight: 700;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius);
+  border: 1px solid currentColor;
+}
+
+.best {
+  color: var(--colour-best);
+}
+
+.worst {
+  color: var(--colour-worst);
+}
+
+.icon {
+  flex: none;
+}

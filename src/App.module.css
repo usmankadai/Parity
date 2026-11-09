@@ -54,7 +54,7 @@
   padding: var(--space-3);
   border-left: 4px solid var(--colour-accent);
   background: var(--colour-surface-sunken);
-  margin: 0;
+  margin: 0 0 var(--space-5);
 }
 
 .footer {
