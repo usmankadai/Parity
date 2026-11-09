@@ -6,7 +6,7 @@ Compare statutory employee benefits across the United Kingdom, Ireland, Germany 
 
 > Independent portfolio project, inspired by reward comparison tools. Not affiliated with or endorsed by Benifex. Illustrative data, not legal or HR advice.
 
-**Live demo:** _coming soon_ (runs entirely on mock data, no sign-in or API key needed)
+**Live demo: [parity.usmankadai.dev](https://parity.usmankadai.dev/)** (runs entirely on mock data, no sign-in or API key needed)
 
 ## Why I built it
 
