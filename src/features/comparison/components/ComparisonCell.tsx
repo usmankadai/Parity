@@ -28,16 +28,23 @@ export function ComparisonCell({ cell, categoryLabel, displayUnit }: ComparisonC
 
   return (
     <td className={styles.cell}>
-      <p className={styles.headline}>
-        <strong>{headline(cell, displayUnit)}</strong>
-        {rank && <RankMarker rank={rank} />}
+      <p className={`${styles.headline} ${row?.status === 'verified' ? '' : styles.headlineMuted}`}>
+        {headline(cell, displayUnit)}
       </p>
+      {rank && (
+        <p className={styles.rank}>
+          <RankMarker rank={rank} />
+        </p>
+      )}
 
-      {row && row.status !== 'todo_verify' && <p className={styles.stated}>{row.sourceValue}</p>}
+      {/* The source's own wording, unless it says exactly what the figure says. */}
+      {row && row.status !== 'todo_verify' && row.sourceValue !== headline(cell, displayUnit) && (
+        <p className={styles.stated}>{row.sourceValue}</p>
+      )}
       {row?.detail && <p className={styles.detail}>{row.detail}</p>}
       {row?.comparisonNote && (
         <p className={styles.note}>
-          <strong>Note:</strong> {row.comparisonNote}
+          <span className={styles.noteLabel}>Note</span> {row.comparisonNote}
         </p>
       )}
 

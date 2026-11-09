@@ -43,13 +43,21 @@ export function CountryPicker() {
   );
 
   if (status === 'idle' || status === 'loading') {
-    return <p role="status">{retry ? retryMessage(retry) : 'Loading countries…'}</p>;
+    return (
+      <div className={styles.toolbar}>
+        <p role="status" className={styles.message}>
+          {retry ? retryMessage(retry) : 'Loading countries…'}
+        </p>
+      </div>
+    );
   }
 
   if (status === 'error') {
     return (
-      <div className={styles.loadError}>
-        <p>Sorry, the list of countries could not be loaded. {loadError}</p>
+      <div className={`${styles.toolbar} ${styles.problem}`}>
+        <p className={styles.message}>
+          Sorry, the list of countries could not be loaded. {loadError}
+        </p>
         {tryAgain}
       </div>
     );
@@ -57,8 +65,8 @@ export function CountryPicker() {
 
   if (countries.length === 0) {
     return (
-      <div className={styles.loadError}>
-        <p>No countries are available to compare right now.</p>
+      <div className={`${styles.toolbar} ${styles.problem}`}>
+        <p className={styles.message}>No countries are available to compare right now.</p>
         {tryAgain}
       </div>
     );
@@ -84,48 +92,55 @@ export function CountryPicker() {
     <form onSubmit={handleSubmit} noValidate className={styles.form}>
       {error && <ErrorSummary errors={[{ fieldId: firstCheckboxId, message: error }]} />}
 
-      <fieldset
-        className={`${styles.fieldset} ${error ? styles.fieldsetError : ''}`}
-        aria-describedby={error ? `${hintId} ${errorId}` : hintId}
-      >
-        <legend id={legendId} className={styles.legend}>
-          Which countries do you want to compare?
-        </legend>
-        <p id={hintId} className={styles.hint}>
-          Select {MIN_COUNTRIES} to {countries.length}.
-        </p>
-        {error && (
-          <p id={errorId} className={styles.error}>
-            <span className="visually-hidden">Error:</span> {error}
+      <div className={`${styles.toolbar} ${error ? styles.toolbarError : ''}`}>
+        <fieldset
+          className={styles.fieldset}
+          aria-describedby={error ? `${hintId} ${errorId}` : hintId}
+        >
+          <legend id={legendId} className={styles.legend}>
+            Which countries do you want to compare?
+          </legend>
+          <p id={hintId} className={styles.hint}>
+            Select {MIN_COUNTRIES} to {countries.length}.
           </p>
-        )}
+          {error && (
+            <p id={errorId} className={styles.error}>
+              <span className="visually-hidden">Error:</span> {error}
+            </p>
+          )}
 
-        <div className={styles.options}>
-          {countries.map((country) => {
-            const id = `${idPrefix}-${country.code}`;
-            return (
-              <div key={country.code} className={styles.option}>
-                <input
-                  id={id}
-                  type="checkbox"
-                  name="countries"
-                  value={country.code}
-                  checked={selected.includes(country.code)}
-                  onChange={(event) => {
-                    toggle(country.code, event.target.checked);
-                  }}
-                  className={styles.checkbox}
-                />
-                <label htmlFor={id} className={styles.label}>
-                  {country.name}
-                </label>
-              </div>
-            );
-          })}
-        </div>
-      </fieldset>
+          <div className={styles.options}>
+            {countries.map((country) => {
+              const id = `${idPrefix}-${country.code}`;
+              return (
+                <div key={country.code} className={styles.option}>
+                  <input
+                    id={id}
+                    type="checkbox"
+                    name="countries"
+                    value={country.code}
+                    checked={selected.includes(country.code)}
+                    onChange={(event) => {
+                      toggle(country.code, event.target.checked);
+                    }}
+                    className={styles.checkbox}
+                  />
+                  <label htmlFor={id} className={styles.label}>
+                    <span aria-hidden="true" className={styles.code}>
+                      {country.code}
+                    </span>
+                    {country.name}
+                  </label>
+                </div>
+              );
+            })}
+          </div>
+        </fieldset>
 
-      <Button type="submit">Compare</Button>
+        <Button type="submit" className={styles.submit}>
+          Compare
+        </Button>
+      </div>
     </form>
   );
 }

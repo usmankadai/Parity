@@ -54,10 +54,10 @@ test('fits the screen without sideways page scrolling', async ({ page }) => {
 
   // The open demo panel stays on screen.
   await page.getByRole('button', { name: /^Demo scenarios/ }).click();
-  const panel = page.getByRole('heading', { name: 'Demo scenarios' });
-  await expect(panel).toBeInViewport();
+  const panelHeading = page.getByRole('heading', { name: 'Demo scenarios' });
+  await expect(panelHeading).toBeInViewport();
   const viewport = page.viewportSize();
-  const box = await page.getByRole('complementary', { name: 'Demo scenarios' }).boundingBox();
+  const box = await panelHeading.locator('..').boundingBox();
   expect(box && viewport && box.x >= 0 && box.x + box.width <= viewport.width).toBe(true);
   await expectNoAxeViolations(page);
 });

@@ -42,7 +42,7 @@ In the demo, answers are scripted from the rows sent, so they can never invent a
 
 ### Try the failure handling
 
-The **Demo scenarios** button (bottom right) changes how the mock API responds, so you can watch the error handling work:
+The **Demo scenarios** button in the top bar changes how the mock API responds, so you can watch the error handling work:
 
 | Scenario         | What you should see                                                                                     |
 | ---------------- | ------------------------------------------------------------------------------------------------------- |
@@ -53,7 +53,7 @@ The **Demo scenarios** button (bottom right) changes how the mock API responds, 
 | Flaky            | Two failures, then the retries recover on their own.                                                    |
 | Drops mid-stream | An answer stops part way, is marked "Answer interrupted" and is not retried. Other data loads normally. |
 
-Pick a scenario, then press Compare, ask a question, or "Reload countries". The choice is remembered, so reloading the page shows how the country list behaves too.
+Open it from the top bar, pick a scenario, then press Compare, ask a question, or "Reload countries". The choice is remembered, so reloading the page shows how the country list behaves too.
 
 ## Redux-Saga patterns, and why
 
@@ -114,6 +114,7 @@ npm run test:e2e     # Playwright (first time: npx playwright install chromium)
 npm run typecheck
 npm run lint
 npm run build
+npm run brand:images # regenerate the favicon and link-preview image
 ```
 
 Real mode (`PUBLIC_API_MODE=real`) arrives in phase 2.
@@ -124,6 +125,7 @@ Real mode (`PUBLIC_API_MODE=real`) arrives in phase 2.
 - [ADR 0002: Test environment for MSW streaming](docs/decisions/0002-test-environment-for-msw-streaming.md)
 - [ADR 0003: Normalising statutory data](docs/decisions/0003-normalising-statutory-data.md)
 - [ADR 0004: Retry only before the first chunk](docs/decisions/0004-retry-only-before-the-first-chunk.md)
+- [ADR 0005: Workspace layout and visual identity](docs/decisions/0005-workspace-layout-and-visual-identity.md)
 
 ## Known limitations
 

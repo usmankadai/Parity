@@ -1,30 +1,58 @@
-/* Parity design tokens. Text colours meet at least 4.5:1 on their backgrounds. */
+/*
+ * Parity design tokens.
+ * Contrast checked: text pairs are at least 4.5:1, and control borders at
+ * least 3:1 against their backgrounds (see docs/decisions/0005).
+ */
 :root {
-  --colour-ink: #14213d;
-  --colour-ink-muted: #4a5568;
-  --colour-surface: #ffffff;
-  --colour-surface-sunken: #f4f5f8;
-  --colour-border: #c8ccd6;
-  --colour-accent: #b45309;
-  --colour-accent-ink: #ffffff;
-  --colour-focus: #1d4ed8;
-  --colour-error: #b42318;
-  --colour-best: #166534;
-  --colour-worst: #9a3412;
+  /* Ink: text */
+  --ink: #0e1726;
+  --ink-soft: #4a5466;
 
-  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-size-body: 1rem;
-  --font-size-small: 0.875rem;
-  --font-size-h1: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
-  --line-height: 1.5;
+  /* Surfaces */
+  --paper: #f4f5f7; /* page background */
+  --panel: #ffffff; /* cards */
+  --line: #dde1e8; /* dividers (decorative) */
+  --line-strong: #7b8496; /* control borders (3:1) */
 
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 1rem;
-  --space-4: 1.5rem;
-  --space-5: 2.5rem;
+  /* Brand: cobalt, with a pale wash for selected states */
+  --brand: #2340cc;
+  --brand-ink: #ffffff;
+  --brand-wash: #eef1fd;
 
-  --radius: 6px;
-  --focus-ring: 3px solid var(--colour-focus);
-  --content-width: 72rem;
+  /* Meaning (always paired with text or an icon, never colour alone) */
+  --good: #0e6b3e;
+  --good-wash: #e8f5ee;
+  --bad: #a3341a;
+  --bad-wash: #fbede8;
+  --danger: #b42318;
+  --signal: #ffd37a; /* demo badge and switcher */
+  --focus: #2340cc;
+
+  /* Type */
+  --font: 'IBM Plex Sans Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --text-xs: 0.8125rem;
+  --text-s: 0.875rem;
+  --text-m: 1rem;
+  --text-l: 1.25rem;
+  --text-xl: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  --leading: 1.5;
+
+  /* Space */
+  --gap-2xs: 0.25rem;
+  --gap-xs: 0.5rem;
+  --gap-s: 0.75rem;
+  --gap-m: 1rem;
+  --gap-l: 1.5rem;
+  --gap-xl: 2rem;
+
+  /* Shape */
+  --r-s: 4px;
+  --r-m: 8px;
+  --r-l: 12px;
+  --shadow: 0 1px 2px rgb(14 23 38 / 0.06), 0 1px 3px rgb(14 23 38 / 0.08);
+  --shadow-raised: 0 8px 24px rgb(14 23 38 / 0.16);
+
+  --ring: 0 0 0 2px var(--panel), 0 0 0 4px var(--focus);
+  --workspace-width: 90rem;
+  --ask-width: 24rem;
 }

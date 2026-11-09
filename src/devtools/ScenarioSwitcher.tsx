@@ -8,7 +8,7 @@ import { getScenario, SCENARIOS, setScenario, type ScenarioId } from '../mocks/s
 import styles from './ScenarioSwitcher.module.css';
 
 /**
- * A floating demo panel (mock mode only) that changes how the mock API
+ * A demo panel in the top bar (mock mode only) that changes how the mock API
  * behaves, so retries, errors and empty states can be seen live.
  */
 export function ScenarioSwitcher() {
@@ -19,7 +19,7 @@ export function ScenarioSwitcher() {
   const panelId = useId();
   const headingId = useId();
   const toggleRef = useRef<HTMLButtonElement>(null);
-  const containerRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -48,9 +48,23 @@ export function ScenarioSwitcher() {
   const activeLabel = SCENARIOS.find((scenario) => scenario.id === active)?.label ?? active;
 
   return (
-    // A labelled landmark, so the panel is easy to find and not stray content.
-    <aside ref={containerRef} className={styles.switcher} aria-label="Demo scenarios">
+    // Lives in the top bar next to the "Demo data" badge, and opens as a
+    // dropdown, so it never covers page content.
+    <div ref={containerRef} className={styles.switcher}>
       <LiveRegion message={announcement} />
+
+      <button
+        ref={toggleRef}
+        type="button"
+        className={styles.toggle}
+        aria-expanded={open}
+        aria-controls={panelId}
+        onClick={() => {
+          setOpen((value) => !value);
+        }}
+      >
+        Demo scenarios: {activeLabel}
+      </button>
 
       <div id={panelId} className={styles.panel} hidden={!open}>
         <h2 id={headingId} className={styles.heading}>
@@ -94,19 +108,6 @@ export function ScenarioSwitcher() {
           Reload countries
         </Button>
       </div>
-
-      <button
-        ref={toggleRef}
-        type="button"
-        className={styles.toggle}
-        aria-expanded={open}
-        aria-controls={panelId}
-        onClick={() => {
-          setOpen((value) => !value);
-        }}
-      >
-        Demo scenarios: {activeLabel}
-      </button>
-    </aside>
+    </div>
   );
 }

@@ -1,25 +1,22 @@
 .summary {
-  border: 4px solid var(--colour-error);
-  padding: var(--space-3) var(--space-4);
-  margin-bottom: var(--space-4);
-}
-
-.summary:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: 2px;
+  padding: var(--gap-m) var(--gap-l);
+  margin-bottom: var(--gap-m);
+  background: var(--panel);
+  border: 2px solid var(--danger);
+  border-radius: var(--r-l);
 }
 
 .heading {
-  font-size: 1.25rem;
-  margin: 0 0 var(--space-2);
+  font-size: var(--text-l);
+  margin: 0 0 var(--gap-xs);
 }
 
 .list {
   margin: 0;
-  padding-left: var(--space-4);
+  padding-left: var(--gap-l);
 }
 
 .list a {
-  color: var(--colour-error);
+  color: var(--danger);
   font-weight: 600;
 }

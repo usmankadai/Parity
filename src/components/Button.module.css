@@ -3,26 +3,30 @@
   font-weight: 600;
   line-height: 1.2;
   min-height: 2.75rem;
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius);
-  border: 2px solid var(--colour-ink);
+  padding: var(--gap-xs) var(--gap-l);
+  border-radius: var(--r-m);
+  border: 1px solid transparent;
   cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
 }
 
 .primary {
-  background: var(--colour-ink);
-  color: var(--colour-surface);
+  background: var(--brand);
+  color: var(--brand-ink);
 }
 
 .primary:hover {
-  background: #22335c;
+  background: #1b33a8;
 }
 
 .secondary {
-  background: var(--colour-surface);
-  color: var(--colour-ink);
+  background: var(--panel);
+  color: var(--ink);
+  border-color: var(--line-strong);
 }
 
 .secondary:hover {
-  background: var(--colour-surface-sunken);
+  background: var(--paper);
 }

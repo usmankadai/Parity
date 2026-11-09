@@ -1,3 +1,56 @@
-.message p {
-  margin: 0 0 var(--space-3);
+.card {
+  padding: var(--gap-l);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-l);
+  box-shadow: var(--shadow);
+}
+
+.text {
+  margin: 0 0 var(--gap-s);
+}
+
+.text:last-child {
+  margin-bottom: 0;
+}
+
+.problem {
+  box-shadow:
+    inset 4px 0 0 var(--bad),
+    var(--shadow);
+}
+
+.empty {
+  border-style: dashed;
+  border-color: var(--line-strong);
+  box-shadow: none;
+  background: transparent;
+}
+
+.emptyTitle {
+  font-weight: 600;
+  font-size: var(--text-l);
+  margin: 0 0 var(--gap-2xs);
+}
+
+.emptyText {
+  color: var(--ink-soft);
+  margin: 0 0 var(--gap-s);
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.categories li {
+  font-size: var(--text-s);
+  padding: var(--gap-2xs) var(--gap-s);
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--line);
 }

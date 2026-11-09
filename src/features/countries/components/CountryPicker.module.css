@@ -1,64 +1,128 @@
 .form {
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--gap-l);
+}
+
+/* A card that holds the country choices and the Compare button in one row. */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--gap-m) var(--gap-l);
+  padding: var(--gap-m) var(--gap-l);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-l);
+  box-shadow: var(--shadow);
+  margin-bottom: var(--gap-l);
+}
+
+.form .toolbar {
+  margin-bottom: 0;
+}
+
+.toolbarError {
+  border-color: var(--danger);
+  box-shadow:
+    inset 4px 0 0 var(--danger),
+    var(--shadow);
+}
+
+.problem {
+  align-items: center;
+}
+
+.message {
+  margin: 0;
 }
 
 .fieldset {
   border: 0;
-  margin: 0 0 var(--space-4);
+  margin: 0;
   padding: 0;
-}
-
-.fieldsetError {
-  border-left: 4px solid var(--colour-error);
-  padding-left: var(--space-3);
+  min-width: 0;
 }
 
 .legend {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: var(--space-1);
+  font-size: var(--text-m);
+  font-weight: 600;
   padding: 0;
 }
 
 .hint {
-  color: var(--colour-ink-muted);
-  margin: 0 0 var(--space-3);
+  font-size: var(--text-s);
+  color: var(--ink-soft);
+  margin: 0 0 var(--gap-s);
 }
 
 .error {
-  color: var(--colour-error);
-  font-weight: 700;
-  margin: 0 0 var(--space-3);
+  color: var(--danger);
+  font-weight: 600;
+  margin: 0 0 var(--gap-s);
 }
 
 .options {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2) var(--space-4);
+  gap: var(--gap-xs);
 }
 
+/* Each country is a pill. The real checkbox stays visible inside it. */
 .option {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--gap-xs);
+  padding: 0 var(--gap-s) 0 var(--gap-s);
+  min-height: 2.75rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--panel);
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+.option:has(.checkbox:checked) {
+  background: var(--brand-wash);
+  border-color: var(--brand);
+}
+
+.option:has(.checkbox:focus-visible) {
+  box-shadow: var(--ring);
 }
 
 .checkbox {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.125rem;
+  height: 1.125rem;
   margin: 0;
-  accent-color: var(--colour-ink);
+  accent-color: var(--brand);
+}
+
+/* The pill shows the focus ring, so the checkbox does not need its own. */
+.checkbox:focus-visible {
+  box-shadow: none;
 }
 
 .label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  padding: var(--gap-xs) 0;
   cursor: pointer;
-  padding: var(--space-1) 0;
+  font-weight: 500;
 }
 
-.loadError {
-  margin-bottom: var(--space-5);
+.code {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
 }
 
-.loadError p {
-  margin: 0 0 var(--space-3);
+.option:has(.checkbox:checked) .code {
+  color: var(--brand);
+}
+
+.submit {
+  flex: none;
 }

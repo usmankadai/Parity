@@ -12,6 +12,7 @@ import {
   selectSelectedCountryCodes,
 } from '../selectors';
 import { comparisonActions } from '../slice';
+import { CATEGORIES } from '../categories';
 import { ComparisonTable } from './ComparisonTable';
 import styles from './ComparisonSection.module.css';
 
@@ -50,18 +51,34 @@ export function ComparisonSection() {
     <section aria-label="Comparison">
       <LiveRegion message={announcement(status, retry, hasData, table.countries.length)} />
 
-      {status === 'loading' && <p>{retry ? retryMessage(retry) : 'Loading comparison…'}</p>}
+      {status === 'idle' && (
+        <div className={`${styles.card} ${styles.empty}`}>
+          <p className={styles.emptyTitle}>Choose at least 2 countries to compare.</p>
+          <p className={styles.emptyText}>The table lines up their legal minimums for:</p>
+          <ul className={styles.categories}>
+            {CATEGORIES.map((category) => (
+              <li key={category.id}>{category.label}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {status === 'loading' && (
+        <div className={styles.card}>
+          <p className={styles.text}>{retry ? retryMessage(retry) : 'Loading comparison…'}</p>
+        </div>
+      )}
 
       {status === 'error' && (
-        <div className={styles.message}>
-          <p>Sorry, the comparison could not be loaded. {error}</p>
+        <div className={`${styles.card} ${styles.problem}`}>
+          <p className={styles.text}>Sorry, the comparison could not be loaded. {error}</p>
           {tryAgain}
         </div>
       )}
 
       {status === 'ready' && !hasData && (
-        <div className={styles.message}>
-          <p>{EMPTY_MESSAGE}</p>
+        <div className={`${styles.card} ${styles.problem}`}>
+          <p className={styles.text}>{EMPTY_MESSAGE}</p>
           {tryAgain}
         </div>
       )}

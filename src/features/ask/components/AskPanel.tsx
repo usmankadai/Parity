@@ -19,6 +19,9 @@ export const STARTER_QUESTIONS = [
 
 export const EMPTY_QUESTION_MESSAGE = 'Enter a question';
 
+/** The section's id, so a "Jump to Ask" link can reach it on narrow screens. */
+export const ASK_SECTION_ID = 'ask';
+
 /** What to announce for each status. Never the text itself, token by token. */
 const ANNOUNCEMENTS: Record<AskStatus, string> = {
   idle: '',
@@ -70,7 +73,7 @@ export function AskPanel() {
   }
 
   return (
-    <section className={styles.panel} aria-labelledby={headingId}>
+    <section id={ASK_SECTION_ID} className={styles.panel} aria-labelledby={headingId}>
       <h2 id={headingId} className={styles.heading}>
         Ask about this comparison
       </h2>

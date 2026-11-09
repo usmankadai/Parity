@@ -5,11 +5,12 @@
 }
 
 html {
-  font-family: var(--font-body);
+  font-family: var(--font);
   font-size: 100%;
-  line-height: var(--line-height);
-  color: var(--colour-ink);
-  background: var(--colour-surface);
+  line-height: var(--leading);
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -23,13 +24,23 @@ body {
   min-height: 100vh;
 }
 
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+/* One focus style everywhere: a cobalt ring with a white gap. */
 :focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: 2px;
+  outline: 2px solid transparent;
+  box-shadow: var(--ring);
+  border-radius: var(--r-s);
 }
 
 a {
-  color: var(--colour-focus);
+  color: var(--brand);
+  text-underline-offset: 0.15em;
 }
 
 /* Visually hidden, still read by screen readers. */

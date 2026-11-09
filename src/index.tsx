@@ -4,6 +4,8 @@ import { Provider } from 'react-redux';
 import { readApiMode } from './app/apiMode';
 import { makeStore } from './app/store';
 import { App } from './App';
+// Self-hosted, so the Content Security Policy can stay at font-src 'self'.
+import '@fontsource-variable/ibm-plex-sans';
 import './styles/tokens.css';
 import './styles/global.css';
 

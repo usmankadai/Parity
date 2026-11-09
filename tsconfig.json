@@ -22,6 +22,7 @@
     "src",
     "config",
     "tests",
+    "scripts",
     "rsbuild.config.ts",
     "vitest.config.ts",
     "playwright.config.ts",
