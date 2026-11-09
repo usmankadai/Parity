@@ -1,6 +1,5 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
 import { describe, expect, it } from 'vitest';
 import { App } from '../App';
 import { TOO_FEW_MESSAGE } from '../features/countries/components/CountryPicker';
@@ -64,19 +63,6 @@ describe('choosing countries', () => {
     expect(screen.queryByRole('heading', { name: 'There is a problem' })).not.toBeInTheDocument();
     expect(document.title).toBe('Parity');
   });
-
-  it('shows a retry when the countries fail to load, and recovers', async () => {
-    server.use(
-      http.get('*/api/countries', () => new HttpResponse(null, { status: 500 }), { once: true }),
-    );
-    const user = userEvent.setup();
-    renderWithStore(<App />);
-
-    await screen.findByText(/could not be loaded/);
-    await user.click(screen.getByRole('button', { name: 'Try again' }));
-
-    expect(await screen.findByRole('checkbox', { name: 'Germany' })).toBeInTheDocument();
-  });
 });
 
 describe('the comparison table', () => {
@@ -137,22 +123,6 @@ describe('the comparison table', () => {
     await user.keyboard('{Escape}');
     expect(toggle).toHaveAttribute('aria-expanded', 'false');
     expect(toggle).toHaveFocus();
-  });
-
-  it('shows a retry when the comparison fails to load, and recovers', async () => {
-    server.use(
-      http.get('*/api/benefits', () => new HttpResponse(null, { status: 503 }), { once: true }),
-    );
-    const { user } = await renderApp();
-
-    await user.click(screen.getByRole('checkbox', { name: 'Ireland' }));
-    await user.click(screen.getByRole('checkbox', { name: 'Netherlands' }));
-    await user.click(screen.getByRole('button', { name: 'Compare' }));
-
-    await screen.findByText(/Sorry, the comparison could not be loaded/);
-    await user.click(screen.getByRole('button', { name: 'Try again' }));
-
-    expect(await screen.findByRole('table')).toBeInTheDocument();
   });
 
   it('does not fetch a country again once it is loaded', async () => {

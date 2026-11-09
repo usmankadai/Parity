@@ -1,13 +1,16 @@
 import { cancelled, put, takeLatest } from 'redux-saga/effects';
 import { fetchCountries } from '../../api/endpoints';
-import { typedCall } from '../../app/typedEffects';
 import { errorMessage } from '../../app/errorMessage';
+import { withRetry } from '../../app/withRetry';
 import { countriesActions } from './slice';
 
 export function* loadCountries() {
   const controller = new AbortController();
   try {
-    const countries = yield* typedCall(fetchCountries, controller.signal);
+    // Retry temporary failures with backoff, telling the UI before each retry.
+    const countries = yield* withRetry(fetchCountries, [controller.signal], {
+      onRetry: (attempt, maxAttempts) => countriesActions.retrying({ attempt, maxAttempts }),
+    });
     yield put(countriesActions.loaded(countries));
   } catch (error) {
     yield put(countriesActions.loadFailed(errorMessage(error)));

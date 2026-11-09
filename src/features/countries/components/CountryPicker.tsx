@@ -4,7 +4,13 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { Button } from '../../../components/Button';
 import { ErrorSummary } from '../../../components/ErrorSummary';
 import { comparisonActions } from '../../comparison/slice';
-import { selectCountries, selectCountriesError, selectCountriesStatus } from '../selectors';
+import { retryMessage } from '../../../components/retryMessage';
+import {
+  selectCountries,
+  selectCountriesError,
+  selectCountriesRetry,
+  selectCountriesStatus,
+} from '../selectors';
 import { countriesActions } from '../slice';
 import styles from './CountryPicker.module.css';
 
@@ -17,6 +23,7 @@ export function CountryPicker() {
   const countries = useAppSelector(selectCountries);
   const status = useAppSelector(selectCountriesStatus);
   const loadError = useAppSelector(selectCountriesError);
+  const retry = useAppSelector(selectCountriesRetry);
 
   const [selected, setSelected] = useState<CountryCode[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -35,17 +42,30 @@ export function CountryPicker() {
     document.title = error ? `${ERROR_PREFIX}${base}` : base;
   }, [error]);
 
+  const tryAgain = (
+    <Button variant="secondary" onClick={() => dispatch(countriesActions.loadRequested())}>
+      Try again
+    </Button>
+  );
+
   if (status === 'idle' || status === 'loading') {
-    return <p role="status">Loading countries…</p>;
+    return <p role="status">{retry ? retryMessage(retry) : 'Loading countries…'}</p>;
   }
 
   if (status === 'error') {
     return (
       <div className={styles.loadError}>
         <p>Sorry, the list of countries could not be loaded. {loadError}</p>
-        <Button variant="secondary" onClick={() => dispatch(countriesActions.loadRequested())}>
-          Try again
-        </Button>
+        {tryAgain}
+      </div>
+    );
+  }
+
+  if (countries.length === 0) {
+    return (
+      <div className={styles.loadError}>
+        <p>No countries are available to compare right now.</p>
+        {tryAgain}
       </div>
     );
   }

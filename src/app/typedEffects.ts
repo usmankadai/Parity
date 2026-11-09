@@ -26,9 +26,13 @@ export function* typedSelect<Result>(
   return (yield select(selector)) as Result;
 }
 
-/** Runs calls in parallel with `all`, and types the results as a list. */
+/**
+ * Runs calls in parallel with `all`, and types the results as a list.
+ * The caller names the result type, because a call to a generic generator
+ * (such as withRetry) loses it.
+ */
 export function* typedAllCalls<Result>(
-  effects: CallEffect<Result>[],
-): Generator<AllEffect<CallEffect<Result>>, Result[], unknown> {
+  effects: CallEffect<unknown>[],
+): Generator<AllEffect<CallEffect<unknown>>, Result[], unknown> {
   return (yield all(effects)) as Result[];
 }

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from './app/hooks';
+import { ScenarioSwitcher } from './devtools/ScenarioSwitcher';
 import { selectApiMode } from './app/selectors';
 import { ComparisonSection } from './features/comparison/components/ComparisonSection';
 import { CountryPicker } from './features/countries/components/CountryPicker';
@@ -45,6 +46,8 @@ export function App() {
           <p>{DISCLAIMER}</p>
         </div>
       </footer>
+
+      {apiMode === 'mock' && <ScenarioSwitcher />}
     </>
   );
 }

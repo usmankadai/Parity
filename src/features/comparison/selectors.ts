@@ -9,6 +9,7 @@ import { rankRow, type Rank } from './ranking';
 export const selectSelectedCountryCodes = (state: RootState) => state.comparison.selected;
 export const selectComparisonStatus = (state: RootState) => state.comparison.status;
 export const selectComparisonError = (state: RootState) => state.comparison.error;
+export const selectComparisonRetry = (state: RootState) => state.comparison.retry;
 const selectRowsByCountry = (state: RootState) => state.comparison.rowsByCountry;
 
 export const selectLoadedCountryCodes = createSelector([selectRowsByCountry], (rowsByCountry) =>
@@ -59,4 +60,10 @@ export const selectComparisonTable = createSelector(
 
     return { countries, rows };
   },
+);
+
+/** True when at least one selected country has rows, so there is something to show. */
+export const selectComparisonHasData = createSelector(
+  [selectSelectedCountryCodes, selectRowsByCountry],
+  (selected, rowsByCountry) => selected.some((code) => (rowsByCountry[code]?.length ?? 0) > 0),
 );

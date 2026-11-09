@@ -63,6 +63,8 @@
   color: var(--colour-ink-muted);
   font-size: var(--font-size-small);
   padding: var(--space-3) 0;
+  /* Room for the floating demo button, so it never covers the footer text. */
+  padding-bottom: calc(var(--space-3) + 4rem);
 }
 
 .footer p {

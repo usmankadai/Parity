@@ -71,10 +71,10 @@ describe('loadComparison', () => {
       .provide([
         [
           matchers.call.fn(fetchBenefits),
-          throwError(new ApiError('http', 'The server replied with status 500.', 500)),
+          throwError(new ApiError('http', 'The server replied with status 404.', 404)),
         ],
       ])
-      .put(comparisonActions.loadFailed('The server replied with status 500.'))
+      .put(comparisonActions.loadFailed('The server replied with status 404.'))
       .run();
   });
 });
