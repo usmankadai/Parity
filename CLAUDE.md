@@ -44,7 +44,9 @@ npm run typecheck    # tsc --noEmit
 npm run lhci         # Lighthouse CI budgets (after npm run build)
 ```
 
-Before you call any task done, run `npm run typecheck && npm run lint && npm run test`, and they must all pass. For changes to a user flow, also run `npm run test:e2e`.
+Before you call any task done, run `npm run typecheck && npm run lint && npm run test`, and they must all pass.
+
+**Lockfile:** change dependencies with npm 11.21 or later (for example `npx npm@11.21.2 install -D some-package`). Older npm versions (such as 11.6) leave out Rspack's optional WebAssembly dependencies (`@emnapi/core`, `@emnapi/runtime`) on macOS, and `npm ci` on the Linux CI runner then fails. Updating Node to 24.15 or later brings a new enough npm. For changes to a user flow, also run `npm run test:e2e`.
 
 ## Two run modes
 
