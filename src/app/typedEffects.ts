@@ -1,9 +1,13 @@
+import { END, type EventChannel } from 'redux-saga';
 import {
   all,
   call,
+  race,
   select,
+  takeMaybe,
   type AllEffect,
   type CallEffect,
+  type RaceEffect,
   type SelectEffect,
 } from 'redux-saga/effects';
 import type { RootState } from './store';
@@ -35,4 +39,29 @@ export function* typedAllCalls<Result>(
   effects: CallEffect<unknown>[],
 ): Generator<AllEffect<CallEffect<unknown>>, Result[], unknown> {
   return (yield all(effects)) as Result[];
+}
+
+/**
+ * Races effects with `race`. Only the winner's key is set in the result.
+ * The caller names the result shape.
+ */
+export function* typedRace<Result extends Record<string, unknown>>(
+  effects: Record<keyof Result, unknown>,
+): Generator<RaceEffect<unknown>, Partial<Result>, unknown> {
+  return (yield race(effects)) as Partial<Result>;
+}
+
+/**
+ * Takes the next message from a channel. Uses takeMaybe, so a closed channel
+ * returns END instead of silently ending the saga.
+ */
+export function* typedTakeMaybe<Message extends object>(
+  channel: EventChannel<Message>,
+): Generator<unknown, Message | END, unknown> {
+  return (yield takeMaybe(channel)) as Message | END;
+}
+
+/** True when a channel message is END (the channel closed). Narrows the type, unlike `=== END`. */
+export function isEnd(value: object): value is END {
+  return value === END;
 }

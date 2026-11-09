@@ -1,9 +1,12 @@
 import { delay, http, HttpResponse, type HttpHandler } from 'msw';
+import { validateAskRequest } from '../api/askValidation';
 import type { CountryCode } from '../api/types';
 import { isCountryCode } from '../api/validate';
 import benefits from './fixtures/benefits.json';
 import countries from './fixtures/countries.json';
-import { getScenario, getSlowDelayMs, shouldFlakyFail } from './scenarios';
+import { composeAnswer, toStreamEvents } from './askAnswer';
+import { getScenario, getSlowDelayMs, getStreamDelayMs, shouldFlakyFail } from './scenarios';
+import { sseResponse } from './sse';
 
 /**
  * Applies the active scenario to a data endpoint. Returns a response to send
@@ -56,5 +59,32 @@ export const handlers: HttpHandler[] = [
 
     const wanted = new Set<CountryCode>(codes);
     return HttpResponse.json(benefits.filter((row) => wanted.has(row.countryCode as CountryCode)));
+  }),
+
+  http.post('*/api/ask', async ({ request }) => {
+    const validation = validateAskRequest(await request.json().catch(() => null));
+    if (!validation.ok) {
+      return HttpResponse.json({ message: validation.message }, { status: 400 });
+    }
+
+    const scenario = getScenario();
+    if (scenario === 'server-error') {
+      return HttpResponse.json({ message: 'Mock server error' }, { status: 500 });
+    }
+    if (scenario === 'flaky' && shouldFlakyFail('ask')) {
+      return HttpResponse.json({ message: 'Mock flaky failure' }, { status: 503 });
+    }
+
+    const events =
+      scenario === 'empty'
+        ? toStreamEvents({ text: '', rowIds: [] })
+        : toStreamEvents(composeAnswer(validation.request));
+
+    return sseResponse(events, {
+      delayMs: getStreamDelayMs(),
+      initialDelayMs: scenario === 'slow' ? getSlowDelayMs() : 0,
+      // Send a few chunks, then fail: the answer is interrupted, not retried.
+      ...(scenario === 'drops-mid-stream' ? { failAfter: 4 } : {}),
+    });
   }),
 ];

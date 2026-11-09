@@ -72,3 +72,16 @@ export type AskStreamEvent =
   | { type: 'sources'; rowIds: string[] }
   | { type: 'done' }
   | { type: 'error'; message: string };
+
+/** Limits on an /api/ask request, shared by the client, the mock and the proxy. */
+export const ASK_LIMITS = {
+  maxQuestionLength: 500,
+  maxRows: COUNTRY_CODES.length * CATEGORY_IDS.length,
+} as const;
+
+/** The body of POST /api/ask: the question plus the data the answer may use. */
+export interface AskRequest {
+  question: string;
+  countries: CountryCode[];
+  rows: BenefitRow[];
+}

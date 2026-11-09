@@ -1,10 +1,11 @@
-import { useEffect, useId, useState, type SubmitEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import type { CountryCode } from '../../../api/types';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { Button } from '../../../components/Button';
 import { ErrorSummary } from '../../../components/ErrorSummary';
 import { comparisonActions } from '../../comparison/slice';
 import { retryMessage } from '../../../components/retryMessage';
+import { useErrorTitle } from '../../../components/useErrorTitle';
 import {
   selectCountries,
   selectCountriesError,
@@ -16,7 +17,6 @@ import styles from './CountryPicker.module.css';
 
 export const MIN_COUNTRIES = 2;
 export const TOO_FEW_MESSAGE = `Select at least ${MIN_COUNTRIES} countries to compare`;
-const ERROR_PREFIX = 'Error: ';
 
 export function CountryPicker() {
   const dispatch = useAppDispatch();
@@ -34,13 +34,7 @@ export function CountryPicker() {
   const idPrefix = useId();
   const firstCheckboxId = countries[0] ? `${idPrefix}-${countries[0].code}` : '';
 
-  // Prefix the page title while the form shows an error (GOV.UK pattern).
-  useEffect(() => {
-    const base = document.title.startsWith(ERROR_PREFIX)
-      ? document.title.slice(ERROR_PREFIX.length)
-      : document.title;
-    document.title = error ? `${ERROR_PREFIX}${base}` : base;
-  }, [error]);
+  useErrorTitle(error !== null);
 
   const tryAgain = (
     <Button variant="secondary" onClick={() => dispatch(countriesActions.loadRequested())}>

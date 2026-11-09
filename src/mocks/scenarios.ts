@@ -41,6 +41,8 @@ export const SCENARIOS: readonly Scenario[] = [
 
 const STORAGE_KEY = 'parity:scenario';
 const DEFAULT_SLOW_DELAY_MS = 3000;
+const DEFAULT_STREAM_DELAY_MS = 40;
+let streamDelayMs = DEFAULT_STREAM_DELAY_MS;
 
 interface ScenarioState {
   id: ScenarioId;
@@ -98,4 +100,13 @@ export function shouldFlakyFail(endpoint: string): boolean {
   if (failures >= 2) return false;
   state.flakyFailures.set(endpoint, failures + 1);
   return true;
+}
+
+/** The pause between streamed answer chunks. Not reset by setScenario, so tests can keep answers fast. */
+export function getStreamDelayMs(): number {
+  return streamDelayMs;
+}
+
+export function setStreamDelayMs(ms: number = DEFAULT_STREAM_DELAY_MS): void {
+  streamDelayMs = ms;
 }

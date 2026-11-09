@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { ScenarioSwitcher } from './devtools/ScenarioSwitcher';
 import { selectApiMode } from './app/selectors';
+import { AskPanel } from './features/ask/components/AskPanel';
 import { ComparisonSection } from './features/comparison/components/ComparisonSection';
 import { CountryPicker } from './features/countries/components/CountryPicker';
 import { countriesActions } from './features/countries/slice';
@@ -38,6 +39,7 @@ export function App() {
 
           <CountryPicker />
           <ComparisonSection />
+          <AskPanel />
         </div>
       </main>
 

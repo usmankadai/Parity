@@ -276,7 +276,7 @@ Write short ADRs in `docs/decisions/` as decisions are made. Each is one page at
   1. Redux-Saga for async flows (why not thunks or RTK Query for a streaming, cancellable workflow). Milestone 1.
   2. Test environment for MSW streaming. Milestone 1 (done: jsdom).
   3. Normalising statutory data (the 5-day week assumption, rankable categories, the three statuses). Milestone 2 (done).
-  4. Retry only before the first chunk. Milestone 4.
+  4. Retry only before the first chunk. Milestone 4 (done).
 - **Phase 2:** 5. Checking citations in the proxy. Milestone 7.
 
 ## Milestones
