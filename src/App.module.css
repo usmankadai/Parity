@@ -1,0 +1,70 @@
+.inner {
+  width: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 var(--space-3);
+}
+
+.header {
+  background: var(--colour-ink);
+  color: var(--colour-surface);
+  padding: var(--space-3) 0;
+}
+
+.header .inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.badge {
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius);
+  background: var(--colour-accent);
+  color: var(--colour-accent-ink);
+}
+
+.main {
+  flex: 1;
+  padding: var(--space-5) 0;
+}
+
+.title {
+  font-size: var(--font-size-h1);
+  line-height: 1.2;
+  margin: 0 0 var(--space-3);
+}
+
+.lead {
+  font-size: 1.125rem;
+  max-width: 40rem;
+  margin: 0 0 var(--space-4);
+}
+
+.notice {
+  max-width: 40rem;
+  padding: var(--space-3);
+  border-left: 4px solid var(--colour-accent);
+  background: var(--colour-surface-sunken);
+  margin: 0;
+}
+
+.footer {
+  border-top: 1px solid var(--colour-border);
+  background: var(--colour-surface-sunken);
+  color: var(--colour-ink-muted);
+  font-size: var(--font-size-small);
+  padding: var(--space-3) 0;
+}
+
+.footer p {
+  margin: 0;
+}

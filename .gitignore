@@ -1,0 +1,17 @@
+# dependencies
+node_modules/
+
+# build and test output
+dist/
+coverage/
+test-results/
+playwright-report/
+
+# env files (never commit keys)
+.env
+.env.*
+!.env.example
+
+# misc
+.DS_Store
+*.log
