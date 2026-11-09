@@ -1,4 +1,7 @@
 .scroller {
+  /* Contain absolutely positioned content (such as visually hidden text), so
+     it scrolls with the table instead of widening the whole page. */
+  position: relative;
   overflow-x: auto;
   border: 1px solid var(--colour-border);
   border-radius: var(--radius);

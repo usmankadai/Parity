@@ -20,8 +20,10 @@ export default tseslint.config(
       },
     },
   },
-  reactHooks.configs.flat.recommended,
-  jsxA11y.flatConfigs.recommended,
+  // React rules only apply to the app. (Playwright fixtures also have a
+  // function called `use`, which the hooks rule would mistake for React's.)
+  { ...reactHooks.configs.flat.recommended, files: ['src/**/*.{ts,tsx}'] },
+  { ...jsxA11y.flatConfigs.recommended, files: ['src/**/*.{ts,tsx}'] },
   {
     rules: {
       'no-restricted-syntax': [

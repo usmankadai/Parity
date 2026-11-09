@@ -43,14 +43,19 @@ export function SourceDisclosure({ row, context }: SourceDisclosureProps) {
         ref={buttonRef}
         type="button"
         className={styles.toggle}
+        // The name starts with the visible word, so voice users can say
+        // "click Source" (WCAG 2.5.3). aria-expanded says whether it is open.
+        aria-label={`Source: ${context}`}
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => {
           setOpen((value) => !value);
         }}
       >
-        {open ? 'Hide source' : 'Source'}
-        <span className="visually-hidden">: {context}</span>
+        <span aria-hidden="true" className={styles.chevron}>
+          {open ? '▾' : '▸'}
+        </span>
+        Source
       </button>
 
       <div id={panelId} className={styles.panel} hidden={!open}>

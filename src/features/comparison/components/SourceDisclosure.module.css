@@ -13,6 +13,12 @@
   cursor: pointer;
 }
 
+.chevron {
+  display: inline-block;
+  width: 1em;
+  text-decoration: none;
+}
+
 .panel {
   margin-top: var(--space-2);
   padding: var(--space-2) var(--space-3);
