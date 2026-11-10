@@ -22,32 +22,40 @@ function roundTo1(value: number): number {
 }
 
 /**
- * Converts a row's figure into the category's display unit. Returns null when
- * there is no figure (not verified, or no legal minimum).
- *
- * Throws if the row's unit cannot be converted, because that is a data error
- * that should fail tests rather than show a wrong number.
+ * Converts an amount in a source unit into a display unit. `label` names the
+ * figure in error messages. Throws if the unit cannot be converted, because
+ * that is a data error that should fail tests rather than show a wrong number.
  */
-export function normalise(row: BenefitRow, displayUnit: DisplayUnit): number | null {
-  if (row.status !== 'verified' || row.amount === null || row.unit === null) {
-    return null;
-  }
-
-  const { amount, unit } = row;
-
+export function normaliseAmount(
+  amount: number,
+  unit: SourceUnit,
+  displayUnit: DisplayUnit,
+  label: string,
+): number {
   if (displayUnit === 'percent' || displayUnit === 'days') {
     const expected = displayUnit === 'percent' ? 'percent' : 'days';
     if (unit !== expected) {
-      throw new Error(`${row.id}: cannot show "${unit}" as ${displayUnit}`);
+      throw new Error(`${label}: cannot show "${unit}" as ${displayUnit}`);
     }
     return amount;
   }
 
   const weeksPerUnit = WEEKS_PER_UNIT[unit];
   if (weeksPerUnit === undefined) {
-    throw new Error(`${row.id}: cannot convert "${unit}" to a duration`);
+    throw new Error(`${label}: cannot convert "${unit}" to a duration`);
   }
 
   const weeks = amount * weeksPerUnit;
   return roundTo1(displayUnit === 'working-days' ? weeks * WORKING_DAYS_PER_WEEK : weeks);
+}
+
+/**
+ * Converts a statutory row's figure into the category's display unit. Returns
+ * null when there is no figure (not verified, or no legal minimum).
+ */
+export function normalise(row: BenefitRow, displayUnit: DisplayUnit): number | null {
+  if (row.status !== 'verified' || row.amount === null || row.unit === null) {
+    return null;
+  }
+  return normaliseAmount(row.amount, row.unit, displayUnit, row.id);
 }

@@ -47,9 +47,9 @@ describe('choosing countries', () => {
 
     const summary = screen.getByRole('heading', { name: 'There is a problem' }).parentElement;
     expect(summary).toHaveFocus();
-    expect(screen.getByRole('group')).toHaveAccessibleDescription(
-      `Select 2 to 4. Error: ${TOO_FEW_MESSAGE}`,
-    );
+    expect(
+      screen.getByRole('group', { name: 'Which countries do you want to compare?' }),
+    ).toHaveAccessibleDescription(`Select 2 to 4. Error: ${TOO_FEW_MESSAGE}`);
     expect(document.title).toBe('Error: Parity');
     expect(screen.queryByRole('table')).not.toBeInTheDocument();
 
@@ -70,9 +70,14 @@ describe('the comparison table', () => {
     const { user } = await renderApp();
     const table = await compare(user, ['Germany', 'United Kingdom']);
 
+    // The company view leads; ranking markers belong to the legal minimums view.
+    expect(within(table).queryByText('Most generous')).not.toBeInTheDocument();
+    await user.click(screen.getByRole('radio', { name: 'Legal minimums only' }));
+    const statutoryTable = screen.getByRole('table');
+
     // Columns follow the country list order, not the order clicked.
     expect(
-      within(table)
+      within(statutoryTable)
         .getAllByRole('columnheader')
         .map((th) => th.textContent),
     ).toEqual(['Benefit', 'United Kingdom', 'Germany']);
@@ -81,7 +86,7 @@ describe('the comparison table', () => {
     ).toBeInTheDocument();
 
     // 24 German "Werktage" on a 6-day week become 20 working days on a 5-day week.
-    const [gbLeave, deLeave] = cellsFor(table, /^Annual leave/);
+    const [gbLeave, deLeave] = cellsFor(statutoryTable, /^Annual leave/);
     expect(gbLeave).toHaveTextContent('28 working days');
     expect(gbLeave).toHaveTextContent('Most generous');
     expect(deLeave).toHaveTextContent('20 working days');
@@ -89,12 +94,12 @@ describe('the comparison table', () => {
     expect(deLeave).toHaveTextContent('24 working days, counted on a 6-day week');
 
     // No legal minimum is said in words, and ranks as least generous.
-    const [, dePaternity] = cellsFor(table, /^Paternity or partner leave/);
+    const [, dePaternity] = cellsFor(statutoryTable, /^Paternity or partner leave/);
     expect(dePaternity).toHaveTextContent('No legal minimum');
     expect(dePaternity).toHaveTextContent('Least generous');
 
     // Categories that are not rankable get no markers.
-    for (const cell of cellsFor(table, /^Statutory sick pay/)) {
+    for (const cell of cellsFor(statutoryTable, /^Statutory sick pay/)) {
       expect(cell).not.toHaveTextContent(/generous/);
     }
 

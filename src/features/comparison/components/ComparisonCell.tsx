@@ -11,7 +11,8 @@ interface ComparisonCellProps {
   displayUnit: DisplayUnit;
 }
 
-function headline(cell: Cell, displayUnit: DisplayUnit): string {
+/** The legal minimum in words: a figure, "No legal minimum" or "Not yet verified". */
+export function minimumText(cell: Cell, displayUnit: DisplayUnit): string {
   if (!cell.row) return 'No data';
   switch (cell.row.status) {
     case 'todo_verify':
@@ -29,7 +30,7 @@ export function ComparisonCell({ cell, categoryLabel, displayUnit }: ComparisonC
   return (
     <td className={styles.cell}>
       <p className={`${styles.headline} ${row?.status === 'verified' ? '' : styles.headlineMuted}`}>
-        {headline(cell, displayUnit)}
+        {minimumText(cell, displayUnit)}
       </p>
       {rank && (
         <p className={styles.rank}>
@@ -38,9 +39,11 @@ export function ComparisonCell({ cell, categoryLabel, displayUnit }: ComparisonC
       )}
 
       {/* The source's own wording, unless it says exactly what the figure says. */}
-      {row && row.status !== 'todo_verify' && row.sourceValue !== headline(cell, displayUnit) && (
-        <p className={styles.stated}>{row.sourceValue}</p>
-      )}
+      {row &&
+        row.status !== 'todo_verify' &&
+        row.sourceValue !== minimumText(cell, displayUnit) && (
+          <p className={styles.stated}>{row.sourceValue}</p>
+        )}
       {row?.detail && <p className={styles.detail}>{row.detail}</p>}
       {row?.comparisonNote && (
         <p className={styles.note}>

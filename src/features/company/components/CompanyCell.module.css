@@ -1,0 +1,11 @@
+.minimum {
+  font-size: var(--text-s);
+  color: var(--ink-soft);
+  padding-top: var(--gap-xs);
+  border-top: 1px dashed var(--line);
+}
+
+.minimum strong {
+  color: var(--ink);
+  font-weight: 600;
+}

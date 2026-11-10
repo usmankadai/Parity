@@ -5,6 +5,8 @@ import type { LoadStatus, RetryProgress } from '../countries/slice';
 export interface ComparisonState {
   /** The countries the user last asked to compare. */
   selected: CountryCode[];
+  /** The countries ticked in the picker, not yet compared. */
+  draft: CountryCode[];
   /** Rows already loaded, kept per country so re-comparing does not refetch. */
   rowsByCountry: Partial<Record<CountryCode, BenefitRow[]>>;
   status: LoadStatus;
@@ -14,6 +16,7 @@ export interface ComparisonState {
 
 const initialState: ComparisonState = {
   selected: [],
+  draft: [],
   rowsByCountry: {},
   status: 'idle',
   error: null,
@@ -24,8 +27,12 @@ export const comparisonSlice = createSlice({
   name: 'comparison',
   initialState,
   reducers: {
+    draftChanged(state, action: PayloadAction<CountryCode[]>) {
+      state.draft = action.payload;
+    },
     requested(state, action: PayloadAction<CountryCode[]>) {
       state.selected = action.payload;
+      state.draft = action.payload;
       state.status = 'loading';
       state.error = null;
       state.retry = null;

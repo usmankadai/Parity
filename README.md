@@ -20,7 +20,19 @@ It is meant to show three things:
 
 ## What it does
 
-### Compare countries
+### A company's package against the law
+
+Parity opens on **Northwind Logistics**, a fictional freight company with 2,790 employees in the United Kingdom, Ireland, Germany and the Netherlands. One click compares its package in every country with the legal minimums:
+
+- A **summary** says where it falls short: Ireland's notice period (a contract template still gives 1 week, where the law requires 2) and Germany's (the company gives "4 weeks", the law "1 month, to the end of a calendar month").
+- Each cell shows the company's figure, a marker (**Above minimum**, **Meets minimum**, **Below minimum (non-compliant)**, with an icon and text), the policy in words, and the legal minimum with its source.
+- **Company benefits** with no legal minimum (private health insurance, a gym and wellbeing allowance, an employee assistance programme) have their own section.
+- **Ask** knows the company's figures too: "Where is our package below the legal minimum?" cites both the company's figure and the law it falls short of.
+- "Legal minimums only" switches back to the plain comparison between countries.
+
+The company and its figures are fictional and labelled that way. The rules for comparing them are in [ADR 0006](docs/decisions/0006-company-view-and-gap-rules.md).
+
+### Compare legal minimums between countries
 
 Pick 2 to 4 countries and get a table of 7 statutory minimums: annual leave, paid public holidays, maternity leave, paternity or partner leave, sick pay, employer pension contributions and employer notice.
 
@@ -126,6 +138,7 @@ Real mode (`PUBLIC_API_MODE=real`) arrives in phase 2.
 - [ADR 0003: Normalising statutory data](docs/decisions/0003-normalising-statutory-data.md)
 - [ADR 0004: Retry only before the first chunk](docs/decisions/0004-retry-only-before-the-first-chunk.md)
 - [ADR 0005: Workspace layout and visual identity](docs/decisions/0005-workspace-layout-and-visual-identity.md)
+- [ADR 0006: Company view and gap rules](docs/decisions/0006-company-view-and-gap-rules.md)
 
 ## Known limitations
 
@@ -144,8 +157,9 @@ I built Parity with Claude Code as a pair programmer, working from a `CLAUDE.md`
 - Removed a claim from the data ("in practice they often are") that the official source did not support.
 - Caught, through Playwright on a phone screen, that hidden screen reader text was widening the page, and fixed the cause rather than the symptom.
 
-## What's next (phase 2)
+## What's next
 
-- Company package overlay: enter your own package and see where it is above, at or below each minimum.
-- Real mode: a serverless proxy to an AI model, with request validation, a check that every citation was actually sent, rate limiting, and a CI check that the API key never reaches the browser.
+- **Real AI answers:** a serverless proxy to an AI model, with request validation, a check that every citation was actually sent, rate limiting, and a CI check that the API key never reaches the browser.
+- **What-if editing:** change a company figure and see the gaps update, saved locally by a debounced saga.
+- **A second company with its own branding,** switching the whole workspace's theme from config.
 - Lighthouse budgets in CI, and a short demo video.

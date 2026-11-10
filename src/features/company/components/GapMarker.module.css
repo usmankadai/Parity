@@ -1,0 +1,30 @@
+.marker {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-2xs);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 0.3125rem var(--gap-xs);
+  border-radius: 999px;
+}
+
+.good {
+  color: var(--good);
+  background: var(--good-wash);
+}
+
+.bad {
+  color: var(--bad);
+  background: var(--bad-wash);
+}
+
+.neutral {
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.icon {
+  flex: none;
+}

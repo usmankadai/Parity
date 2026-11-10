@@ -6,6 +6,8 @@ import { ScenarioSwitcher } from './devtools/ScenarioSwitcher';
 import { AskPanel, ASK_SECTION_ID } from './features/ask/components/AskPanel';
 import { ComparisonSection } from './features/comparison/components/ComparisonSection';
 import { CountryPicker } from './features/countries/components/CountryPicker';
+import { selectSelectedCompany } from './features/company/selectors';
+import { companyActions } from './features/company/slice';
 import { countriesActions } from './features/countries/slice';
 import styles from './App.module.css';
 
@@ -18,9 +20,11 @@ export const DATA_CHECKED = '9 November 2026';
 export function App() {
   const dispatch = useAppDispatch();
   const apiMode = useAppSelector(selectApiMode);
+  const company = useAppSelector(selectSelectedCompany);
 
   useEffect(() => {
     dispatch(countriesActions.loadRequested());
+    dispatch(companyActions.loadRequested());
   }, [dispatch]);
 
   return (
@@ -31,7 +35,15 @@ export function App() {
             <Logo />
             <span className={styles.wordmark}>Parity</span>
           </span>
-          <span className={styles.tagline}>Statutory benefits workspace</span>
+          <span className={styles.tagline}>
+            {company ? (
+              <>
+                {company.name} <span className={styles.fictional}>(fictional)</span>
+              </>
+            ) : (
+              'Statutory benefits workspace'
+            )}
+          </span>
           <span className={styles.meta}>
             <span className={styles.checked}>Sources checked {DATA_CHECKED}</span>
             {apiMode === 'mock' && (

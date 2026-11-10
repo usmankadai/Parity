@@ -41,4 +41,36 @@ describe('validateAskRequest', () => {
     expect(validateAskRequest('question').ok).toBe(false);
     expect(validateAskRequest(null).ok).toBe(false);
   });
+
+  it('accepts company data for the request countries, and rejects anything else', () => {
+    const figure = {
+      countryCode: 'GB',
+      category: 'pension',
+      amount: 5,
+      unit: 'percent',
+      summary: '5% of basic salary',
+    };
+    const company = {
+      id: 'northwind',
+      name: 'Northwind Logistics',
+      figures: [figure],
+      benefits: [],
+    };
+
+    const ok = validateAskRequest({ ...valid, company });
+    expect(ok.ok && ok.request.company?.figures).toHaveLength(1);
+
+    expect(validateAskRequest({ ...valid, company: { ...company, id: 'Not A Slug' } }).ok).toBe(
+      false,
+    );
+    expect(
+      validateAskRequest({
+        ...valid,
+        company: { ...company, figures: [{ ...figure, countryCode: 'DE' }] },
+      }).ok,
+    ).toBe(false);
+    expect(
+      validateAskRequest({ ...valid, company: { ...company, figures: Array(29).fill(figure) } }).ok,
+    ).toBe(false);
+  });
 });

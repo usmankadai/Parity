@@ -65,6 +65,6 @@ export async function compare(page: Page, names: string[]) {
   for (const name of names) {
     await page.getByRole('checkbox', { name }).check();
   }
-  await page.getByRole('button', { name: 'Compare' }).click();
+  await page.getByRole('button', { name: 'Compare', exact: true }).click();
   await expect(page.getByRole('table')).toBeVisible();
 }

@@ -3,6 +3,7 @@ import type { CountryCode } from '../../../api/types';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { Button } from '../../../components/Button';
 import { ErrorSummary } from '../../../components/ErrorSummary';
+import { selectDraftCountryCodes } from '../../comparison/selectors';
 import { comparisonActions } from '../../comparison/slice';
 import { retryMessage } from '../../../components/retryMessage';
 import { useErrorTitle } from '../../../components/useErrorTitle';
@@ -25,7 +26,7 @@ export function CountryPicker() {
   const loadError = useAppSelector(selectCountriesError);
   const retry = useAppSelector(selectCountriesRetry);
 
-  const [selected, setSelected] = useState<CountryCode[]>([]);
+  const selected = useAppSelector(selectDraftCountryCodes);
   const [error, setError] = useState<string | null>(null);
 
   const legendId = useId();
@@ -73,8 +74,10 @@ export function CountryPicker() {
   }
 
   function toggle(code: CountryCode, checked: boolean) {
-    setSelected((current) =>
-      checked ? [...current, code] : current.filter((value) => value !== code),
+    dispatch(
+      comparisonActions.draftChanged(
+        checked ? [...selected, code] : selected.filter((value) => value !== code),
+      ),
     );
   }
 

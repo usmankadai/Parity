@@ -66,6 +66,59 @@ export interface BenefitRow {
   asOf: string;
 }
 
+/** Benefits a company may offer that have no legal minimum. */
+export const COMPANY_BENEFIT_IDS = [
+  'private-health',
+  'wellbeing-allowance',
+  'employee-assistance',
+] as const;
+export type CompanyBenefitId = (typeof COMPANY_BENEFIT_IDS)[number];
+
+/** A company's own figure for a statutory category in one country. */
+export interface CompanyFigure {
+  countryCode: CountryCode;
+  category: CategoryId;
+  /** In the same source units as statutory rows. Null when there is no single figure. */
+  amount: number | null;
+  unit: SourceUnit | null;
+  /** The policy in plain English, for example "25 days plus 8 bank holidays". */
+  summary: string;
+}
+
+/** Whether a company offers a benefit with no legal minimum in one country. */
+export interface CompanyBenefit {
+  countryCode: CountryCode;
+  benefit: CompanyBenefitId;
+  provided: boolean;
+  summary: string;
+}
+
+export interface CompanyTheme {
+  /** Main brand colour (buttons, links, focus). White text must read on it. */
+  brand: string;
+  /** Pale tint of the brand colour for selected states. Brand text must read on it. */
+  brandWash: string;
+}
+
+/** A fictional company, configured in one file (see CLAUDE.md, "Company view"). */
+export interface Company {
+  id: string;
+  name: string;
+  industry: string;
+  theme: CompanyTheme;
+  countries: { code: CountryCode; headcount: number }[];
+  figures: CompanyFigure[];
+  benefits: CompanyBenefit[];
+}
+
+/** The company data sent with a question, so the answer can use and cite it. */
+export interface AskCompanyContext {
+  id: string;
+  name: string;
+  figures: CompanyFigure[];
+  benefits: CompanyBenefit[];
+}
+
 /** One event in the `/api/ask` text/event-stream response. */
 export type AskStreamEvent =
   | { type: 'chunk'; text: string }
@@ -77,6 +130,8 @@ export type AskStreamEvent =
 export const ASK_LIMITS = {
   maxQuestionLength: 500,
   maxRows: COUNTRY_CODES.length * CATEGORY_IDS.length,
+  maxCompanyFigures: COUNTRY_CODES.length * CATEGORY_IDS.length,
+  maxCompanyBenefits: COUNTRY_CODES.length * COMPANY_BENEFIT_IDS.length,
 } as const;
 
 /** The body of POST /api/ask: the question plus the data the answer may use. */
@@ -84,4 +139,5 @@ export interface AskRequest {
   question: string;
   countries: CountryCode[];
   rows: BenefitRow[];
+  company?: AskCompanyContext;
 }

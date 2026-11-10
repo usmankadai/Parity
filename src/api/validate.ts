@@ -18,11 +18,11 @@ export class InvalidResponseError extends Error {
 
 type UnknownRecord = Record<string, unknown>;
 
-function isRecord(value: unknown): value is UnknownRecord {
+export function isRecord(value: unknown): value is UnknownRecord {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function isOneOf<T extends string>(options: readonly T[], value: unknown): value is T {
+export function isOneOf<T extends string>(options: readonly T[], value: unknown): value is T {
   return typeof value === 'string' && (options as readonly string[]).includes(value);
 }
 
@@ -30,7 +30,7 @@ export function isCountryCode(value: unknown): value is CountryCode {
   return isOneOf(COUNTRY_CODES, value);
 }
 
-function requireString(record: UnknownRecord, key: string, where: string): string {
+export function requireString(record: UnknownRecord, key: string, where: string): string {
   const value = record[key];
   if (typeof value !== 'string') {
     throw new InvalidResponseError(`${where}: "${key}" should be a string`);
@@ -47,7 +47,7 @@ function optionalString(record: UnknownRecord, key: string, where: string): stri
   return value;
 }
 
-function requireArray(value: unknown, where: string): unknown[] {
+export function requireArray(value: unknown, where: string): unknown[] {
   if (!Array.isArray(value)) {
     throw new InvalidResponseError(`${where}: expected a list`);
   }

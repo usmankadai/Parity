@@ -1,0 +1,60 @@
+.overview {
+  padding: var(--gap-l);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-l);
+  box-shadow: var(--shadow);
+}
+
+.eyebrow {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin: 0 0 var(--gap-2xs);
+}
+
+.name {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.meta {
+  color: var(--ink-soft);
+  margin: var(--gap-2xs) 0 var(--gap-m);
+}
+
+.countries {
+  list-style: none;
+  margin: 0 0 var(--gap-m);
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: var(--gap-xs);
+}
+
+.countries li {
+  display: flex;
+  flex-direction: column;
+  padding: var(--gap-s);
+  border-radius: var(--r-m);
+  background: var(--paper);
+}
+
+.countryName {
+  font-weight: 600;
+}
+
+.headcount {
+  font-size: var(--text-s);
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.text {
+  margin: 0 0 var(--gap-m);
+  max-width: 40rem;
+}

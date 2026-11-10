@@ -6,6 +6,7 @@ import { ErrorSummary } from '../../../components/ErrorSummary';
 import { LiveRegion } from '../../../components/LiveRegion';
 import { useErrorTitle } from '../../../components/useErrorTitle';
 import { selectComparisonHasData, selectComparisonStatus } from '../../comparison/selectors';
+import { selectCompanyViewActive, selectSelectedCompany } from '../../company/selectors';
 import { selectAskState } from '../selectors';
 import { askActions, type AskStatus } from '../slice';
 import { AnswerPanel } from './AnswerPanel';
@@ -14,6 +15,14 @@ import styles from './AskPanel.module.css';
 export const STARTER_QUESTIONS = [
   'Where is parental leave most generous?',
   'Which countries would a 25-day annual leave policy fall below the minimum in?',
+  'How does sick pay compare?',
+];
+
+/** In the company view, lead with the questions a Reward Director asks about their own package. */
+export const COMPANY_STARTER_QUESTIONS = [
+  'Where is our package below the legal minimum?',
+  "Which countries don't offer private health insurance?",
+  'Where is parental leave most generous?',
   'How does sick pay compare?',
 ];
 
@@ -38,6 +47,9 @@ export function AskPanel() {
   const ask = useAppSelector(selectAskState);
   const comparisonReady = useAppSelector(selectComparisonStatus) === 'ready';
   const hasData = useAppSelector(selectComparisonHasData);
+  const companyActive = useAppSelector(selectCompanyViewActive);
+  const company = useAppSelector(selectSelectedCompany);
+  const starters = companyActive ? COMPANY_STARTER_QUESTIONS : STARTER_QUESTIONS;
 
   const [question, setQuestion] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -83,8 +95,9 @@ export function AskPanel() {
       ) : (
         <>
           <p className={styles.hint}>
-            Answers use only the data in the table, and list the rows they are based on. In this
-            demo, answers are scripted rather than written by an AI.
+            Answers use only the data in the table
+            {companyActive && company ? `, including ${company.name}'s figures,` : ''} and list the
+            rows they are based on. In this demo, answers are scripted rather than written by an AI.
           </p>
 
           <LiveRegion message={ANNOUNCEMENTS[ask.status]} />
@@ -92,7 +105,7 @@ export function AskPanel() {
           <div className={styles.starters}>
             <p className={styles.startersLabel}>Try a question:</p>
             <ul className={styles.starterList}>
-              {STARTER_QUESTIONS.map((starter) => (
+              {starters.map((starter) => (
                 <li key={starter}>
                   <Button
                     variant="secondary"

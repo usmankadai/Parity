@@ -2,6 +2,7 @@ import { compare, expect, expectNoAxeViolations, openApp, test } from './fixture
 
 test('compares countries, with a source for every cell', async ({ page }) => {
   await openApp(page);
+  await page.getByRole('radio', { name: 'Legal minimums only' }).check();
   await compare(page, ['United Kingdom', 'Germany']);
 
   const table = page.getByRole('table');
@@ -35,7 +36,7 @@ test('compares countries, with a source for every cell', async ({ page }) => {
 test('shows an error summary when fewer than 2 countries are chosen', async ({ page }) => {
   await openApp(page);
   await page.getByRole('checkbox', { name: 'Ireland' }).check();
-  await page.getByRole('button', { name: 'Compare' }).click();
+  await page.getByRole('button', { name: 'Compare', exact: true }).click();
 
   await expect(page.getByRole('heading', { name: 'There is a problem' })).toBeVisible();
   await expect(page).toHaveTitle(/^Error: /);

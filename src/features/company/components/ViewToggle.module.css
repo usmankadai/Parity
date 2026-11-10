@@ -1,0 +1,42 @@
+.toggle {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--gap-2xs);
+  padding: var(--gap-2xs);
+  margin: 0 0 var(--gap-m);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-m);
+  background: var(--panel);
+}
+
+.option {
+  position: relative;
+}
+
+/* The real radio sits under the label, so it still takes clicks and focus. */
+.radio {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.label {
+  display: block;
+  padding: var(--gap-xs) var(--gap-m);
+  border-radius: var(--r-s);
+  font-size: var(--text-s);
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.radio:checked + .label {
+  background: var(--brand);
+  color: var(--brand-ink);
+}
+
+.radio:focus-visible + .label {
+  box-shadow: var(--ring);
+}

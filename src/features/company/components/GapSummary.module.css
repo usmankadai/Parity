@@ -1,0 +1,45 @@
+.summary {
+  margin-bottom: var(--gap-m);
+}
+
+.heading {
+  font-size: var(--text-m);
+  margin: 0 0 var(--gap-xs);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: var(--gap-xs);
+}
+
+.country {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-2xs);
+  padding: var(--gap-s) var(--gap-m);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-m);
+}
+
+.hasGaps {
+  border-color: var(--bad);
+  box-shadow: inset 4px 0 0 var(--bad);
+}
+
+.name {
+  font-weight: 600;
+}
+
+.detail {
+  font-size: var(--text-s);
+  color: var(--ink-soft);
+}
+
+.hasGaps .detail strong {
+  color: var(--bad);
+}

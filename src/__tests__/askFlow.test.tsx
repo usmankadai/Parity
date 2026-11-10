@@ -23,10 +23,20 @@ afterEach(() => {
   server.events.removeAllListeners();
 });
 
-async function renderAndCompare(names = ['United Kingdom', 'Germany']) {
+/**
+ * Compares countries. Most tests here are about statutory answers, so they use
+ * the "Legal minimums only" view; company tests pass view: 'company'.
+ */
+async function renderAndCompare(
+  names = ['United Kingdom', 'Germany'],
+  view: 'statutory' | 'company' = 'statutory',
+) {
   const user = userEvent.setup();
   renderWithStore(<App />);
   await screen.findByRole('group', { name: 'Which countries do you want to compare?' });
+  if (view === 'statutory') {
+    await user.click(await screen.findByRole('radio', { name: 'Legal minimums only' }));
+  }
   for (const name of names) {
     await user.click(screen.getByRole('checkbox', { name }));
   }
@@ -223,5 +233,48 @@ describe('scenarios', () => {
     expect(
       await screen.findByText('No answer was returned. Try asking in a different way.'),
     ).toBeInTheDocument();
+  });
+});
+
+describe('asking about the company', () => {
+  it('lists where the company is below the legal minimum, citing both sides', async () => {
+    const user = await renderAndCompare(['Ireland', 'Germany', 'Netherlands'], 'company');
+
+    await user.click(
+      screen.getByRole('button', { name: 'Where is our package below the legal minimum?' }),
+    );
+    await answerComplete();
+
+    const answer = screen.getByRole('heading', { name: 'Answer' }).parentElement;
+    expect(answer).toHaveTextContent(
+      'Ireland, employer notice after 2 years: Northwind Logistics gives 1 week',
+    );
+    expect(answer).toHaveTextContent(
+      'Germany, employer notice after 2 years: Northwind Logistics gives 4 weeks',
+    );
+    expect(answer).not.toHaveTextContent('Netherlands, employer notice');
+    expect(chipLabels()).toEqual([
+      'Northwind Logistics: Ireland employer notice after 2 years',
+      'Ireland employer notice after 2 years',
+      'Northwind Logistics: Germany employer notice after 2 years',
+      'Germany employer notice after 2 years',
+    ]);
+  });
+
+  it('answers questions about company-only benefits', async () => {
+    const user = await renderAndCompare(['United Kingdom', 'Germany'], 'company');
+
+    await user.click(
+      screen.getByRole('button', { name: "Which countries don't offer private health insurance?" }),
+    );
+    await answerComplete();
+
+    const answer = screen.getByRole('heading', { name: 'Answer' }).parentElement;
+    expect(answer).toHaveTextContent('United Kingdom, private health insurance: offered');
+    expect(answer).toHaveTextContent('Germany, private health insurance: not offered');
+    expect(chipLabels()).toEqual([
+      'Northwind Logistics: United Kingdom private health insurance',
+      'Northwind Logistics: Germany private health insurance',
+    ]);
   });
 });

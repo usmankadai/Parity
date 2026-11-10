@@ -2,6 +2,7 @@ import { compare, expect, expectNoAxeViolations, openApp, test } from './fixture
 
 test('asks a question and gets a streamed answer with sources', async ({ page }) => {
   await openApp(page);
+  await page.getByRole('radio', { name: 'Legal minimums only' }).check();
   await compare(page, ['United Kingdom', 'Netherlands']);
 
   await page.getByRole('button', { name: 'Where is parental leave most generous?' }).click();

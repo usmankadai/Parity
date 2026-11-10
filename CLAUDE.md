@@ -121,15 +121,34 @@ Rules:
 - Every cell has a "Source" disclosure button that opens a popover (native `popover` attribute, or a disclosure with `aria-expanded`) containing the source link, the source's own wording and the `asOf` date. **Not a tooltip**: tooltips cannot hold links that keyboard and screen reader users can reach.
 - Loading, empty and error states, with a retry button on error.
 
-### 2. Company package overlay
+### 2. Company view (phase 2)
 
-- Structured number inputs, one per category per selected country, in the same units as the normalised value (for example "Annual leave, working days"). No free-text parsing.
-- Each cell shows a gap indicator against the statutory minimum: "Above minimum", "Meets minimum" or "Below minimum (non-compliant)", with icon and text.
-- Gap calculation is a pure function in `src/features/package/gap.ts` with unit tests. Rules by statutory `status`:
-  - `verified`: compare the company value with the minimum.
-  - `no_statutory_minimum`: any company value above zero is "Above minimum (no legal minimum)". Zero is "No legal minimum". It is never "Below minimum".
+Parity is used by one company's Reward Director, so the main view shows **that company's package in each country, laid over the legal minimums**.
+
+- **Companies are fictional and config-driven.** Each lives in one file in `src/mocks/fixtures/companies/` (name, industry, brand colours, countries with headcount, the package per country, and company-only benefits), validated like the benefits data and served by `GET /api/companies`. The UI always labels a company "fictional". Never use a real company's name or data.
+- **Statutory categories:** the company figure is stored as `amount` + `unit` (the same source units as statutory rows) plus a plain-English `summary`, and normalised with the same code.
+- **Company-only benefits** (private health insurance, wellbeing allowance, employee assistance programme): `provided` plus a `summary`. There is no legal minimum, so they are marked "Company benefit". Their figures are invented for the fictional company and labelled as such; statutory figures keep their official sources.
+- **Gap calculation** is a pure function in `src/features/company/gap.ts` with unit tests. Rules by statutory `status`:
+  - `verified`: compare the normalised company value with the minimum: "Above minimum", "Meets minimum" or "Below minimum (non-compliant)". No company figure is "No company figure".
+  - `no_statutory_minimum`: any company value above zero is "Above minimum (no legal minimum)". Zero or none is "No legal minimum". It is never "Below minimum".
   - `todo_verify`: "Cannot compare: minimum not verified".
-- The package is stored in Redux and saved to `localStorage` by a debounced saga. Storage access is wrapped in try/catch. The stored value has a version number and is validated as `unknown` on load; anything invalid is discarded.
+  - Categories with `comparable: false` (sick pay: pay structures differ) are "Not compared", with the reason shown.
+- Gap markers use an icon **and** text, never colour alone. Ranking markers (most and least generous) are only shown in the "Legal minimums only" view.
+- A **summary** above the table lists, per selected country, how many categories are below the minimum.
+- A toggle switches between "Company view" (default) and "Legal minimums only" (the phase 1 table).
+- Ask sends the company's figures for the selected countries with the statutory rows, and can cite either. Company row IDs are `${companyId}-${countryCode}-${category}`.
+
+### 2b. What-if editing (phase 2)
+
+- "What if" mode turns company figures into structured number inputs, one per comparable category per country, in the display unit. No free-text parsing.
+- Gaps and the summary update as you type. "Reset to company package" restores the config.
+- Edits are stored in Redux and saved to `localStorage` by a **debounced saga**. Storage access is wrapped in try/catch. The stored value has a version number and the company id, and is validated as `unknown` on load; anything invalid is discarded.
+
+### 2c. Per-company branding (phase 2)
+
+- A second fictional company with a different shape (for example 2 countries, a different package, its own colours).
+- A company switcher in the top bar. Switching re-themes the workspace from the company config by setting the brand tokens.
+- A unit test checks every company's colours against the contrast rules, so a config cannot make the page inaccessible.
 
 ### 3. Ask (AI assistant)
 
@@ -170,7 +189,7 @@ src/
   features/
     countries/          # slice, sagas, selectors, components
     comparison/         # table, normalisation, ranking, selectors
-    package/            # company package overlay, gap calc, persistence saga
+    company/            # company view, gap calc, what-if and persistence saga
     ask/                # Ask slice, streaming saga, panel UI
   api/
     types.ts            # shared request/response and event types
@@ -217,8 +236,9 @@ Action names follow `feature/eventName`, past tense for events: `ask/questionSub
 ```
 GET  /api/countries                 -> Country[]
 GET  /api/benefits?countries=GB,DE  -> BenefitRow[]
+GET  /api/companies                 -> Company[]   (fictional companies, phase 2)
 POST /api/ask                       -> text/event-stream
-     body: { question: string, countries: CountryCode[], rows: BenefitRow[] }
+     body: { question: string, countries: CountryCode[], rows: BenefitRow[], company?: AskCompanyContext }
      events: { type: "chunk", text }
            | { type: "sources", rowIds: string[] }
            | { type: "done" }
@@ -279,7 +299,11 @@ Write short ADRs in `docs/decisions/` as decisions are made. Each is one page at
   2. Test environment for MSW streaming. Milestone 1 (done: jsdom).
   3. Normalising statutory data (the 5-day week assumption, rankable categories, the three statuses). Milestone 2 (done).
   4. Retry only before the first chunk. Milestone 4 (done).
-- **Phase 2:** 5. Checking citations in the proxy. Milestone 7.
+- **Phase 2:**
+  - ADR 0005: Workspace layout and visual identity (done).
+  - ADR 0006: Company view and gap rules. Milestone 6 (done).
+  - ADR 0007: Checking citations in the proxy. Milestone 7.
+  - ADR 0008: Per-company branding. Milestone 9.
 
 ## Milestones
 
@@ -293,11 +317,15 @@ The work is split in two phases. **Phase 1 is enough to apply with and talk thro
 4. **Ask (mock streaming):** the SSE parser, `eventChannel`, `takeLatest`, stop, the retry rule, source chips (the client only shows chips for row IDs it sent) and the live region. _Done when:_ all the saga tests listed above pass.
 5. **Ship phase 1:** check ADRs 1 to 4 are written, the CSP, deploy the mock-mode demo, Playwright flows for compare countries, ask then stop, and error then retry, and a README covering what is built and what is planned.
 
-### Phase 2: afterwards
+### Phase 2: a company's Reward Director
 
-6. **Company package overlay:** structured inputs, gap indicators for all three statuses, and debounced, validated persistence.
-7. **Real mode:** the serverless proxy with validation, the sources splitter and citation check, rate limiting, the env-based switch, and the bundle secret check in CI.
-8. **Polish:** Lighthouse budgets in CI, the overlay Playwright flow, and a 60 to 90 second demo video.
+Inspired by feedback that the tool should be about one company's package, not abstract minimums. Built in this order:
+
+6. **Company view:** the company data model and API, gap logic, the company table with summary and view toggle, company-only benefits, and Ask over company data. ADR on the company data model and gap rules.
+7. **Real mode:** the serverless proxy with validation, the sources splitter and citation check (statutory and company row IDs), rate limiting, the env-based switch, and the bundle secret check in CI.
+8. **What-if editing:** structured inputs, live gaps, and debounced, validated persistence.
+9. **Per-company branding:** a second fictional company, the switcher, theming from config, and the contrast test. ADR on config-driven branding.
+10. **Polish:** Lighthouse budgets in CI, Playwright flows for the company view and what-if, and a 60 to 90 second demo video.
 
 Work one milestone at a time. At the end of each, summarise what changed and anything left as TODO.
 

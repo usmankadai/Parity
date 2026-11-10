@@ -1,5 +1,6 @@
-import { ASK_LIMITS, type AskRequest, type CountryCode } from './types';
-import { isCountryCode, parseBenefitRows } from './validate';
+import { ASK_LIMITS, type AskCompanyContext, type AskRequest, type CountryCode } from './types';
+import { isCountryCode, isRecord, parseBenefitRows } from './validate';
+import { parseCompanyBenefit, parseCompanyFigure, SLUG } from './validateCompany';
 
 export type AskValidation = { ok: true; request: AskRequest } | { ok: false; message: string };
 
@@ -48,5 +49,43 @@ export function validateAskRequest(body: unknown): AskValidation {
     return { ok: false, message: 'Every row must belong to one of the countries.' };
   }
 
-  return { ok: true, request: { question: question.trim(), countries, rows: parsedRows } };
+  const request: AskRequest = { question: question.trim(), countries, rows: parsedRows };
+
+  const { company } = body as Record<string, unknown>;
+  if (company !== undefined) {
+    const parsed = parseCompanyContext(company, allowed);
+    if (typeof parsed === 'string') return { ok: false, message: parsed };
+    request.company = parsed;
+  }
+
+  return { ok: true, request };
+}
+
+/** Checks the optional company data. Returns an error message, or the parsed context. */
+function parseCompanyContext(
+  value: unknown,
+  countries: Set<CountryCode>,
+): AskCompanyContext | string {
+  if (!isRecord(value)) return 'company must be an object.';
+  const { id, name, figures, benefits } = value;
+  if (typeof id !== 'string' || !SLUG.test(id)) return 'company.id is not valid.';
+  if (typeof name !== 'string' || name.trim() === '' || name.length > 100) {
+    return 'company.name is not valid.';
+  }
+  if (!Array.isArray(figures) || figures.length > ASK_LIMITS.maxCompanyFigures) {
+    return `company.figures must be a list of at most ${ASK_LIMITS.maxCompanyFigures}.`;
+  }
+  if (!Array.isArray(benefits) || benefits.length > ASK_LIMITS.maxCompanyBenefits) {
+    return `company.benefits must be a list of at most ${ASK_LIMITS.maxCompanyBenefits}.`;
+  }
+  try {
+    return {
+      id,
+      name,
+      figures: figures.map((f, i) => parseCompanyFigure(f, `company.figures[${i}]`, countries)),
+      benefits: benefits.map((b, i) => parseCompanyBenefit(b, `company.benefits[${i}]`, countries)),
+    };
+  } catch {
+    return 'company contains a figure or benefit in an unexpected shape, or for another country.';
+  }
 }

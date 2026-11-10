@@ -28,10 +28,16 @@
 }
 
 .tagline {
-  color: var(--ink-soft);
+  color: var(--ink);
+  font-weight: 600;
   font-size: var(--text-s);
   padding-left: var(--gap-m);
   border-left: 1px solid var(--line);
+}
+
+.fictional {
+  color: var(--ink-soft);
+  font-weight: 400;
 }
 
 .meta {

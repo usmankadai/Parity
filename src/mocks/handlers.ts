@@ -3,6 +3,7 @@ import { validateAskRequest } from '../api/askValidation';
 import type { CountryCode } from '../api/types';
 import { isCountryCode } from '../api/validate';
 import benefits from './fixtures/benefits.json';
+import { companies } from './fixtures/companies';
 import countries from './fixtures/countries.json';
 import { composeAnswer, toStreamEvents } from './askAnswer';
 import { getScenario, getSlowDelayMs, getStreamDelayMs, shouldFlakyFail } from './scenarios';
@@ -40,6 +41,11 @@ export const handlers: HttpHandler[] = [
   http.get('*/api/countries', async () => {
     const override = await applyScenario('countries');
     return override ?? HttpResponse.json(countries);
+  }),
+
+  http.get('*/api/companies', async () => {
+    const override = await applyScenario('companies');
+    return override ?? HttpResponse.json(companies);
   }),
 
   http.get('*/api/benefits', async ({ request }) => {

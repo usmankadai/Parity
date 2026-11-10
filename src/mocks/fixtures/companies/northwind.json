@@ -1,0 +1,299 @@
+{
+  "id": "northwind",
+  "name": "Northwind Logistics",
+  "industry": "Freight and logistics",
+  "theme": {
+    "brand": "#2340cc",
+    "brandWash": "#eef1fd"
+  },
+  "countries": [
+    {
+      "code": "GB",
+      "headcount": 1200
+    },
+    {
+      "code": "IE",
+      "headcount": 320
+    },
+    {
+      "code": "DE",
+      "headcount": 860
+    },
+    {
+      "code": "NL",
+      "headcount": 410
+    }
+  ],
+  "figures": [
+    {
+      "countryCode": "GB",
+      "category": "annual-leave",
+      "amount": 33,
+      "unit": "working-days-5",
+      "summary": "25 days plus 8 bank holidays (33 days in all)"
+    },
+    {
+      "countryCode": "GB",
+      "category": "public-holidays",
+      "amount": 8,
+      "unit": "days",
+      "summary": "8 paid bank holidays, counted within the 33 days"
+    },
+    {
+      "countryCode": "GB",
+      "category": "maternity-leave",
+      "amount": 52,
+      "unit": "weeks",
+      "summary": "52 weeks, with the first 26 at full pay"
+    },
+    {
+      "countryCode": "GB",
+      "category": "paternity-leave",
+      "amount": 4,
+      "unit": "weeks",
+      "summary": "4 weeks at full pay"
+    },
+    {
+      "countryCode": "GB",
+      "category": "sick-pay",
+      "amount": 12,
+      "unit": "weeks",
+      "summary": "Full pay for 12 weeks, then Statutory Sick Pay"
+    },
+    {
+      "countryCode": "GB",
+      "category": "pension",
+      "amount": 5,
+      "unit": "percent",
+      "summary": "5% of basic salary"
+    },
+    {
+      "countryCode": "GB",
+      "category": "notice-period",
+      "amount": 4,
+      "unit": "weeks",
+      "summary": "4 weeks after 2 years' service"
+    },
+    {
+      "countryCode": "IE",
+      "category": "annual-leave",
+      "amount": 21,
+      "unit": "working-days-5",
+      "summary": "21 days"
+    },
+    {
+      "countryCode": "IE",
+      "category": "public-holidays",
+      "amount": 10,
+      "unit": "days",
+      "summary": "All 10 public holidays as paid days off"
+    },
+    {
+      "countryCode": "IE",
+      "category": "maternity-leave",
+      "amount": 42,
+      "unit": "weeks",
+      "summary": "26 weeks topped up to full pay, plus 16 unpaid weeks"
+    },
+    {
+      "countryCode": "IE",
+      "category": "paternity-leave",
+      "amount": 2,
+      "unit": "weeks",
+      "summary": "2 weeks topped up to full pay"
+    },
+    {
+      "countryCode": "IE",
+      "category": "sick-pay",
+      "amount": 5,
+      "unit": "working-days-5",
+      "summary": "5 days a year at 70% of pay (the statutory scheme)"
+    },
+    {
+      "countryCode": "IE",
+      "category": "pension",
+      "amount": 4,
+      "unit": "percent",
+      "summary": "4% of salary into the company scheme"
+    },
+    {
+      "countryCode": "IE",
+      "category": "notice-period",
+      "amount": 1,
+      "unit": "weeks",
+      "summary": "1 week (the contract template has not been updated)"
+    },
+    {
+      "countryCode": "DE",
+      "category": "annual-leave",
+      "amount": 28,
+      "unit": "working-days-5",
+      "summary": "28 days"
+    },
+    {
+      "countryCode": "DE",
+      "category": "public-holidays",
+      "amount": 9,
+      "unit": "days",
+      "summary": "9 nationwide public holidays, plus state holidays where they apply"
+    },
+    {
+      "countryCode": "DE",
+      "category": "maternity-leave",
+      "amount": 14,
+      "unit": "weeks",
+      "summary": "14 weeks, with the employer top-up to full net pay"
+    },
+    {
+      "countryCode": "DE",
+      "category": "paternity-leave",
+      "amount": 2,
+      "unit": "weeks",
+      "summary": "2 weeks of paid partner leave (company policy)"
+    },
+    {
+      "countryCode": "DE",
+      "category": "sick-pay",
+      "amount": 6,
+      "unit": "weeks",
+      "summary": "Full pay for 6 weeks"
+    },
+    {
+      "countryCode": "DE",
+      "category": "pension",
+      "amount": 3,
+      "unit": "percent",
+      "summary": "3% of salary into a company pension"
+    },
+    {
+      "countryCode": "DE",
+      "category": "notice-period",
+      "amount": 4,
+      "unit": "weeks",
+      "summary": "4 weeks"
+    },
+    {
+      "countryCode": "NL",
+      "category": "annual-leave",
+      "amount": 25,
+      "unit": "working-days-5",
+      "summary": "25 days"
+    },
+    {
+      "countryCode": "NL",
+      "category": "public-holidays",
+      "amount": 6,
+      "unit": "days",
+      "summary": "6 public holidays off, as set out in the contract"
+    },
+    {
+      "countryCode": "NL",
+      "category": "maternity-leave",
+      "amount": 16,
+      "unit": "weeks",
+      "summary": "16 weeks"
+    },
+    {
+      "countryCode": "NL",
+      "category": "paternity-leave",
+      "amount": 6,
+      "unit": "weeks",
+      "summary": "1 week at full pay, then 5 weeks topped up to 90%"
+    },
+    {
+      "countryCode": "NL",
+      "category": "sick-pay",
+      "amount": 104,
+      "unit": "weeks",
+      "summary": "100% in the first year, 70% in the second"
+    },
+    {
+      "countryCode": "NL",
+      "category": "pension",
+      "amount": null,
+      "unit": null,
+      "summary": "Through the transport sector's compulsory pension fund"
+    },
+    {
+      "countryCode": "NL",
+      "category": "notice-period",
+      "amount": 1,
+      "unit": "months",
+      "summary": "1 month"
+    }
+  ],
+  "benefits": [
+    {
+      "countryCode": "GB",
+      "benefit": "private-health",
+      "provided": true,
+      "summary": "Private medical insurance for you and your family"
+    },
+    {
+      "countryCode": "IE",
+      "benefit": "private-health",
+      "provided": true,
+      "summary": "Health insurance for you, with family cover at a discount"
+    },
+    {
+      "countryCode": "DE",
+      "benefit": "private-health",
+      "provided": false,
+      "summary": "Not offered: everyone has statutory health insurance"
+    },
+    {
+      "countryCode": "NL",
+      "benefit": "private-health",
+      "provided": false,
+      "summary": "Not offered: basic health insurance is compulsory and personal"
+    },
+    {
+      "countryCode": "GB",
+      "benefit": "wellbeing-allowance",
+      "provided": true,
+      "summary": "£40 a month for gyms, classes or wellbeing apps"
+    },
+    {
+      "countryCode": "IE",
+      "benefit": "wellbeing-allowance",
+      "provided": true,
+      "summary": "€45 a month for gyms, classes or wellbeing apps"
+    },
+    {
+      "countryCode": "DE",
+      "benefit": "wellbeing-allowance",
+      "provided": true,
+      "summary": "€30 a month for gyms or sports clubs"
+    },
+    {
+      "countryCode": "NL",
+      "benefit": "wellbeing-allowance",
+      "provided": false,
+      "summary": "Not offered"
+    },
+    {
+      "countryCode": "GB",
+      "benefit": "employee-assistance",
+      "provided": true,
+      "summary": "Free, confidential support line, 24 hours a day"
+    },
+    {
+      "countryCode": "IE",
+      "benefit": "employee-assistance",
+      "provided": true,
+      "summary": "Free, confidential support line, 24 hours a day"
+    },
+    {
+      "countryCode": "DE",
+      "benefit": "employee-assistance",
+      "provided": true,
+      "summary": "Free, confidential support line, 24 hours a day"
+    },
+    {
+      "countryCode": "NL",
+      "benefit": "employee-assistance",
+      "provided": true,
+      "summary": "Free, confidential support line, 24 hours a day"
+    }
+  ]
+}

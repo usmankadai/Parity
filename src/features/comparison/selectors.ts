@@ -7,6 +7,7 @@ import { normalise } from './normalise';
 import { rankRow, type Rank } from './ranking';
 
 export const selectSelectedCountryCodes = (state: RootState) => state.comparison.selected;
+export const selectDraftCountryCodes = (state: RootState) => state.comparison.draft;
 export const selectComparisonStatus = (state: RootState) => state.comparison.status;
 export const selectComparisonError = (state: RootState) => state.comparison.error;
 export const selectComparisonRetry = (state: RootState) => state.comparison.retry;

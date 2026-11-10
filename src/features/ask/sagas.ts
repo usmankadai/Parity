@@ -7,7 +7,7 @@ import { backoffDelayMs, DEFAULT_RETRY, isRetryable, type RetryOptions } from '.
 import type { AskRequest } from '../../api/types';
 import { errorMessage } from '../../app/errorMessage';
 import { isEnd, typedCall, typedRace, typedSelect, typedTakeMaybe } from '../../app/typedEffects';
-import { selectAskContext } from './selectors';
+import { citableIds, selectAskContext } from './selectors';
 import { askActions } from './slice';
 import { sseChannel, type StreamMessage } from './sseChannel';
 
@@ -19,7 +19,8 @@ const NO_DATA_MESSAGE = 'Compare at least 2 countries first, so there is data to
  * interrupted instead (ADR 0004).
  */
 export function* streamAnswer(request: AskRequest, retry: RetryOptions = DEFAULT_RETRY) {
-  const sentRowIds = new Set(request.rows.map((row) => row.id));
+  // Statutory and company rows: the only IDs an answer may cite.
+  const sentRowIds = citableIds(request);
   const controller = new AbortController();
   let channel: EventChannel<StreamMessage> | undefined;
   let gotFirstChunk = false;
