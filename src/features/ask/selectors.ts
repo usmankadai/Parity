@@ -37,20 +37,7 @@ export const selectAskContext = createSelector(
   },
 );
 
-/** Every row ID the answer may cite, statutory and company. */
-export function citableIds(context: Omit<AskRequest, 'question'>): Set<string> {
-  const ids = new Set(context.rows.map((row) => row.id));
-  const { company } = context;
-  if (company) {
-    for (const f of company.figures) {
-      ids.add(companyFigureId(company.id, f.countryCode, f.category));
-    }
-    for (const b of company.benefits) {
-      ids.add(companyBenefitId(company.id, b.countryCode, b.benefit));
-    }
-  }
-  return ids;
-}
+export { citableIds } from '../../api/citations';
 
 export interface SourceChip {
   id: string;

@@ -7,7 +7,7 @@ export default defineConfig({
     // jsdom, chosen in docs/decisions/0002-test-environment-for-msw-streaming.md
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
-    include: ['src/**/*.test.{ts,tsx}'],
+    include: ['src/**/*.test.{ts,tsx}', 'api/**/*.test.ts'],
     restoreMocks: true,
   },
 });

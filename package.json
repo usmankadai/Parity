@@ -17,7 +17,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
-    "brand:images": "node scripts/brand-images.ts"
+    "brand:images": "node scripts/brand-images.ts",
+    "check:secrets": "node scripts/check-bundle-secrets.ts"
   },
   "msw": {
     "workerDirectory": [
@@ -25,6 +26,7 @@
     ]
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.7.0",
     "@fontsource-variable/ibm-plex-sans": "^5.3.0",
     "@reduxjs/toolkit": "^2.14.0",
     "react": "^19.3.1",

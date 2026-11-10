@@ -50,10 +50,10 @@ Before you call any task done, run `npm run typecheck && npm run lint && npm run
 
 ## Two run modes
 
-- **Mock mode (default, and how the public demo is deployed):** MSW handles every `/api/*` call, including `/api/ask`, which streams a scripted answer with sources. No API key is needed, so anyone can use the live demo for free.
-- **Real mode:** set `PUBLIC_API_MODE=real` (RsBuild exposes `PUBLIC_`-prefixed variables through `import.meta.env`). MSW is not started at all, and every request goes to the real endpoints. `/api/ask` goes to the serverless proxy, which holds `ANTHROPIC_API_KEY`.
-- **The API key must never reach the browser bundle.** It is never `PUBLIC_`-prefixed, and CI fails if the build output contains `ANTHROPIC_API_KEY` or a string starting `sk-ant-`.
-- The public deployment runs in mock mode only. Real mode is for local use and for demoing in an interview.
+- **Mock mode (default, and how the public demo is deployed):** MSW handles every `/api/*` call, including `/api/ask`, which streams a scripted answer built only from the rows sent. No API key is needed.
+- **Real mode:** set `PUBLIC_API_MODE=real` at build time (RsBuild exposes `PUBLIC_`-prefixed variables through `import.meta.env`). MSW still serves the static data (countries, benefits, companies) but passes `/api/ask` through to the serverless proxy (`api/ask.ts`), which calls the model with `ANTHROPIC_API_KEY` and `ANTHROPIC_MODEL` from the server environment. Run it locally with `vercel dev`. See ADR 0007.
+- **The API key must never reach the browser bundle.** It is never `PUBLIC_`-prefixed, and `npm run check:secrets` (in CI) fails if the build output contains `ANTHROPIC_API_KEY` or a string starting `sk-ant-`.
+- The public deployment stays in mock mode until real mode is switched on deliberately.
 
 ## Data scope
 
@@ -205,6 +205,7 @@ src/
   styles/               # tokens.css, global.css
 api/
   ask.ts                # serverless proxy to Anthropic (real mode only)
+  _lib/                 # proxy helpers; the underscore stops Vercel treating them as functions
   lib/                  # validation, sourcesSplitter, rate limit
 docs/
   decisions/            # ADRs
@@ -247,7 +248,7 @@ POST /api/ask                       -> text/event-stream
 
 Define these types once in `src/api/types.ts` and share them between the client, the MSW handlers and the proxy.
 
-## AI proxy rules (`api/ask.ts`)
+## AI proxy rules (`api/ask.ts`, helpers in `api/_lib/`)
 
 - Read `ANTHROPIC_API_KEY` and `ANTHROPIC_MODEL` from env. Fail with a clear 500 (without naming the variable's value) if either is missing.
 - System prompt: answer only from the supplied rows, say plainly when the data does not cover the question, keep answers short, and end with the `<sources>` block.
@@ -302,7 +303,7 @@ Write short ADRs in `docs/decisions/` as decisions are made. Each is one page at
 - **Phase 2:**
   - ADR 0005: Workspace layout and visual identity (done).
   - ADR 0006: Company view and gap rules. Milestone 6 (done).
-  - ADR 0007: Checking citations in the proxy. Milestone 7.
+  - ADR 0007: Real AI mode and checking citations in the proxy. Milestone 7 (done).
   - ADR 0008: Per-company branding. Milestone 9.
 
 ## Milestones

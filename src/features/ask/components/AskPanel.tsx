@@ -1,6 +1,7 @@
 import { useId, useRef, useState, type SubmitEvent } from 'react';
 import { ASK_LIMITS } from '../../../api/types';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { selectApiMode } from '../../../app/selectors';
 import { Button } from '../../../components/Button';
 import { ErrorSummary } from '../../../components/ErrorSummary';
 import { LiveRegion } from '../../../components/LiveRegion';
@@ -48,6 +49,7 @@ export function AskPanel() {
   const comparisonReady = useAppSelector(selectComparisonStatus) === 'ready';
   const hasData = useAppSelector(selectComparisonHasData);
   const companyActive = useAppSelector(selectCompanyViewActive);
+  const apiMode = useAppSelector(selectApiMode);
   const company = useAppSelector(selectSelectedCompany);
   const starters = companyActive ? COMPANY_STARTER_QUESTIONS : STARTER_QUESTIONS;
 
@@ -97,7 +99,10 @@ export function AskPanel() {
           <p className={styles.hint}>
             Answers use only the data in the table
             {companyActive && company ? `, including ${company.name}'s figures,` : ''} and list the
-            rows they are based on. In this demo, answers are scripted rather than written by an AI.
+            rows they are based on.{' '}
+            {apiMode === 'real'
+              ? 'Answers are written by an AI model and can be wrong, so check the sources.'
+              : 'In this demo, answers are scripted rather than written by an AI.'}
           </p>
 
           <LiveRegion message={ANNOUNCEMENTS[ask.status]} />

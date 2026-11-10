@@ -30,6 +30,8 @@ jobs:
       - run: npm run format:check
       - run: npm run test
       - run: npm run build
+      - name: Check the browser bundle has no API keys
+        run: npm run check:secrets
       - name: Audit dependencies
         run: npm audit --audit-level=high
 

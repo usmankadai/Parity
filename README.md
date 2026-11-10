@@ -50,7 +50,7 @@ Below the table, ask a question. It is sent with the rows on screen, the answer 
 - **Retries happen only before the first words arrive.** After that, a failure marks the answer as interrupted and offers Try again, so text is never repeated or mixed ([ADR 0004](docs/decisions/0004-retry-only-before-the-first-chunk.md)).
 - **Citations are checked:** a chip only appears for a row that was actually sent.
 
-In the demo, answers are scripted from the rows sent, so they can never invent a figure. A real AI, behind a small server-side proxy, is planned for phase 2.
+In the public demo, answers are scripted from the rows sent, so they can never invent a figure. **Real mode** sends the question to an AI model through a small server-side proxy that keeps the API key secret, checks every request, rate limits each visitor, and drops any citation that was not in the data sent ([ADR 0007](docs/decisions/0007-real-ai-mode.md)).
 
 ### Try the failure handling
 
@@ -129,7 +129,13 @@ npm run build
 npm run brand:images # regenerate the favicon and link-preview image
 ```
 
-Real mode (`PUBLIC_API_MODE=real`) arrives in phase 2.
+### Real mode (AI answers)
+
+1. In Vercel, set `PUBLIC_API_MODE=real`, `ANTHROPIC_API_KEY` (server-only, never `PUBLIC_`) and `ANTHROPIC_MODEL` (for example `claude-opus-5-5`), then redeploy.
+2. Set a monthly spending limit on the API key. The proxy caps each answer and rate limits each visitor (10 questions per 10 minutes), but the limit lives in memory per server instance, so it is a demo guard, not real protection.
+3. Locally, run `vercel dev` with the same variables in `.env.local`.
+
+`npm run check:secrets` (also in CI) fails if the key could ever reach the browser bundle.
 
 ## Decisions
 
@@ -139,13 +145,14 @@ Real mode (`PUBLIC_API_MODE=real`) arrives in phase 2.
 - [ADR 0004: Retry only before the first chunk](docs/decisions/0004-retry-only-before-the-first-chunk.md)
 - [ADR 0005: Workspace layout and visual identity](docs/decisions/0005-workspace-layout-and-visual-identity.md)
 - [ADR 0006: Company view and gap rules](docs/decisions/0006-company-view-and-gap-rules.md)
+- [ADR 0007: Real AI mode and checking citations in the proxy](docs/decisions/0007-real-ai-mode.md)
 
 ## Known limitations
 
 - Statutory minimums only. Collective agreements, sector rules and company policies are mentioned in notes, not modelled.
 - The 5-day week and "a month is 52 ÷ 12 weeks" are simplifications. They are stated where the numbers appear, and the original wording is always shown.
 - Ranking maternity leave by length can mislead (much of the UK's 52 weeks is low pay or unpaid). The ranking note and cell details say so.
-- Demo answers are scripted, not written by an AI.
+- Demo answers are scripted, not written by an AI, unless real mode is switched on.
 - Laws change. The data was checked on 9 November 2026, and each cell shows its date.
 
 ## How AI tools were used
@@ -159,7 +166,6 @@ I built Parity with Claude Code as a pair programmer, working from a `CLAUDE.md`
 
 ## What's next
 
-- **Real AI answers:** a serverless proxy to an AI model, with request validation, a check that every citation was actually sent, rate limiting, and a CI check that the API key never reaches the browser.
 - **What-if editing:** change a company figure and see the gaps update, saved locally by a debounced saga.
 - **A second company with its own branding,** switching the whole workspace's theme from config.
 - Lighthouse budgets in CI, and a short demo video.
