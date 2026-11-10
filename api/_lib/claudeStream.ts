@@ -50,3 +50,23 @@ export async function* streamFromClaude(
   const message = await stream.finalMessage();
   yield { type: 'end', stopReason: message.stop_reason };
 }
+
+/**
+ * A safe, one-line description of a failed model call for the server logs,
+ * and whether it is worth retrying. Anthropic's error messages describe the
+ * request's settings or the account, never the question or data sent.
+ */
+export function describeModelError(error: unknown): { log: string; retryable: boolean } {
+  if (error instanceof Anthropic.APIConnectionError) {
+    return { log: `${error.name}: could not reach the API`, retryable: true };
+  }
+  if (error instanceof Anthropic.APIError) {
+    const status: number = typeof error.status === 'number' ? error.status : 0;
+    const detail = error.message.replace(/\s+/g, ' ').slice(0, 300);
+    return {
+      log: `${error.name} ${status} ${error.type ?? ''} ${error.errorCode ?? ''} (request ${error.requestID ?? 'unknown'}): ${detail}`,
+      retryable: status === 429 || status >= 500,
+    };
+  }
+  return { log: error instanceof Error ? error.name : 'unknown error', retryable: true };
+}

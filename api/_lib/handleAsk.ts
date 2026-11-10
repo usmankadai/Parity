@@ -24,8 +24,14 @@ export interface AskDeps {
     signal: AbortSignal,
   ) => AsyncIterable<ModelEvent>;
   rateLimit: (key: string) => { allowed: true } | { allowed: false; retryAfterSeconds: number };
-  /** Logs a short, safe description of a failure. Never the request or the upstream message. */
+  /** Logs a short, safe description of a failure. Never the request content. */
   logError: (message: string) => void;
+  /**
+   * Describes a model-call failure: a safe line for the logs, and whether
+   * trying again could help (rate limits, overload, outages) or not (a
+   * rejected request, a bad key, no credit).
+   */
+  describeError: (error: unknown) => { log: string; retryable: boolean };
 }
 
 const MAX_BODY_BYTES = 200_000;
@@ -130,11 +136,18 @@ function streamAnswer(
           controller.close();
           return;
         }
-        deps.logError(
-          `ask: model call failed (${error instanceof Error ? error.name : 'unknown'})`,
-        );
+        const { log, retryable } = deps.describeError(error);
+        deps.logError(`ask: model call failed: ${log}`);
         controller.enqueue(
-          frame({ type: 'error', message: 'The assistant is unavailable. Please try again.' }),
+          frame(
+            retryable
+              ? { type: 'error', message: 'The assistant is unavailable. Please try again.' }
+              : {
+                  type: 'error',
+                  message: 'The AI service could not take this request right now.',
+                  retryable: false,
+                },
+          ),
         );
         controller.close();
       }

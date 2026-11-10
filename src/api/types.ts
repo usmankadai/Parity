@@ -124,7 +124,8 @@ export type AskStreamEvent =
   | { type: 'chunk'; text: string }
   | { type: 'sources'; rowIds: string[] }
   | { type: 'done' }
-  | { type: 'error'; message: string };
+  /** retryable: false means trying again will not help (for example a rejected request). */
+  | { type: 'error'; message: string; retryable?: boolean };
 
 /** Limits on an /api/ask request, shared by the client, the mock and the proxy. */
 export const ASK_LIMITS = {

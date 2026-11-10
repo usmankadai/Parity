@@ -22,7 +22,10 @@ export function isAskStreamEvent(value: unknown): value is AskStreamEvent {
     case 'done':
       return true;
     case 'error':
-      return typeof value.message === 'string';
+      return (
+        typeof value.message === 'string' &&
+        (value.retryable === undefined || typeof value.retryable === 'boolean')
+      );
     default:
       return false;
   }

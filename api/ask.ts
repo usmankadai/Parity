@@ -1,4 +1,4 @@
-import { streamFromClaude } from './_lib/claudeStream.js';
+import { describeModelError, streamFromClaude } from './_lib/claudeStream.js';
 import { handleAsk } from './_lib/handleAsk.js';
 import { createRateLimiter } from './_lib/rateLimit.js';
 
@@ -19,5 +19,6 @@ export function POST(request: Request): Promise<Response> {
     logError: (message) => {
       console.error(message);
     },
+    describeError: describeModelError,
   });
 }

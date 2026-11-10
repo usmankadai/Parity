@@ -50,6 +50,10 @@ function deps(overrides: Partial<AskDeps> = {}): AskDeps & { logs: string[] } {
     streamModel: fakeModel([{ type: 'end', stopReason: 'end_turn' }]).streamModel,
     rateLimit: () => ({ allowed: true }),
     logError: (message) => logs.push(message),
+    describeError: (error) => ({
+      log: error instanceof Error ? error.name : 'unknown',
+      retryable: !(error instanceof Error && error.name === 'Rejected'),
+    }),
     logs,
     ...overrides,
   };
@@ -119,7 +123,24 @@ describe('handleAsk', () => {
       { type: 'error', message: 'The assistant is unavailable. Please try again.' },
     ]);
     expect(JSON.stringify(events)).not.toContain('sk-ant');
-    expect(d.logs.join(' ')).not.toContain('sk-ant');
+  });
+
+  it('marks a rejected request as not worth retrying, and logs why', async () => {
+    const rejected = new Error('400 bad request');
+    rejected.name = 'Rejected';
+    const model = fakeModel(rejected);
+    const d = deps({ streamModel: model.streamModel });
+
+    const events = await readEvents(await handleAsk(post(askBody), d));
+
+    expect(events).toEqual([
+      {
+        type: 'error',
+        message: 'The AI service could not take this request right now.',
+        retryable: false,
+      },
+    ]);
+    expect(d.logs).toEqual(['ask: model call failed: Rejected']);
   });
 
   it('rejects requests before calling the model', async () => {

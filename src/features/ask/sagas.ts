@@ -50,7 +50,8 @@ export function* streamAnswer(request: AskRequest, retry: RetryOptions = DEFAULT
             // Only cite rows we actually sent: never trust the model's IDs.
             yield put(askActions.sourcesReceived(event.rowIds.filter((id) => sentRowIds.has(id))));
           } else if (event.type === 'error') {
-            throw new ApiError('http', event.message, 500);
+            // A rejected request will fail again, so it is not retried (ApiError 4xx).
+            throw new ApiError('http', event.message, event.retryable === false ? 400 : 500);
           } else {
             yield put(askActions.streamCompleted());
             return;

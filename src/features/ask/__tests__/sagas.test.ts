@@ -184,6 +184,21 @@ describe('askQuestion', () => {
     expect(signals).toHaveLength(1);
   });
 
+  it('does not retry when the server says the request was rejected', async () => {
+    const { provide, signals } = provider([
+      () => fakeReader([{ type: 'error', message: 'Rejected.', retryable: false }]),
+    ]);
+
+    await expectSaga(askQuestion, askActions.questionSubmitted('Leave?'), fastRetry)
+      .withState(stateWithComparison())
+      .provide([provide])
+      .not.put.like({ action: { type: askActions.retrying.type } })
+      .put(askActions.streamFailed('Rejected.'))
+      .run();
+
+    expect(signals).toHaveLength(1);
+  });
+
   it('marks the answer interrupted, and does not retry, when the stream fails after text', async () => {
     const { provide, signals } = provider([() => fakeReader(answer, { failAfter: 2 })]);
 
