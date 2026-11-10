@@ -65,15 +65,17 @@ const answer: AskStreamEvent[] = [
 /** Records each request's signal and serves responses in turn. */
 function provider(responses: (() => ReadableStreamDefaultReader<Uint8Array> | Error)[]) {
   const signals: AbortSignal[] = [];
+  const scriptedFlags: boolean[] = [];
   const handler: unknown = dynamic(({ args }: { args: unknown[] }) => {
     signals.push(args[1] as AbortSignal);
+    scriptedFlags.push(args[2] === true);
     const next = responses[Math.min(signals.length - 1, responses.length - 1)];
     if (!next) throw new Error('No response configured');
     const response = next();
     return response instanceof Error ? Promise.reject(response) : Promise.resolve(response);
   });
   const provide: StaticProvider = [matchers.call.fn(openAskStream), handler];
-  return { provide, signals };
+  return { provide, signals, scriptedFlags };
 }
 
 const serverError = () => new ApiError('http', 'The server replied with status 503.', 503);
@@ -228,6 +230,31 @@ describe('askQuestion', () => {
         ),
       )
       .run();
+  });
+});
+
+describe('scripted fallback', () => {
+  it('asks the last question again through the scripted endpoint', async () => {
+    const { provide, scriptedFlags } = provider([() => fakeReader(answer)]);
+    const state = rootReducer(stateWithComparison(), askActions.questionSubmitted('Leave?'));
+
+    await expectSaga(askQuestion, askActions.scriptedFallbackRequested(), fastRetry)
+      .withState(state)
+      .provide([provide])
+      .call.like({ fn: openAskStream, args: [{ question: 'Leave?' }] })
+      .put(askActions.streamCompleted())
+      .run();
+
+    expect(scriptedFlags).toEqual([true]);
+  });
+
+  it('labels the state as scripted, and a new question clears that', () => {
+    let state = rootReducer(undefined, askActions.questionSubmitted('Leave?'));
+    state = rootReducer(state, askActions.scriptedFallbackRequested());
+    expect(state.ask).toMatchObject({ question: 'Leave?', scripted: true, status: 'waiting' });
+
+    state = rootReducer(state, askActions.questionSubmitted('Pensions?'));
+    expect(state.ask.scripted).toBe(false);
   });
 });
 

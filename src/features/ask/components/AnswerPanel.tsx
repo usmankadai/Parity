@@ -1,17 +1,40 @@
-import { useAppSelector } from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { selectApiMode } from '../../../app/selectors';
 import { Button } from '../../../components/Button';
 import { retryMessage } from '../../../components/retryMessage';
 import { selectAskState, selectSourceChips } from '../selectors';
+import { askActions } from '../slice';
 import styles from './AskPanel.module.css';
 
 /** The streamed answer, its status, and the rows it was based on. */
 export function AnswerPanel({ onTryAgain }: { onTryAgain: () => void }) {
+  const dispatch = useAppDispatch();
+  const apiMode = useAppSelector(selectApiMode);
   const ask = useAppSelector(selectAskState);
   const chips = useAppSelector(selectSourceChips);
 
   if (ask.status === 'idle') return null;
 
   const busy = ask.status === 'waiting' || ask.status === 'streaming';
+  // In real mode, when the AI fails, offer the scripted answer (free, served in
+  // the browser, and not counted against the rate limit).
+  const offerScripted = apiMode === 'real' && !ask.scripted;
+  const actions = (
+    <div className={styles.problemActions}>
+      <Button variant="secondary" onClick={onTryAgain}>
+        Try again
+      </Button>
+      {offerScripted && (
+        <Button
+          variant="secondary"
+          onClick={() => dispatch(askActions.scriptedFallbackRequested())}
+        >
+          Show a scripted answer instead
+        </Button>
+      )}
+    </div>
+  );
+
   const paragraphs = ask.answer.split(/\n{2,}/).filter((p) => p.trim() !== '');
 
   return (
@@ -22,6 +45,12 @@ export function AnswerPanel({ onTryAgain }: { onTryAgain: () => void }) {
       <p className={styles.asked}>
         <span className={styles.askedLabel}>You asked:</span> {ask.question}
       </p>
+      {ask.scripted && (
+        <p className={styles.scriptedNote}>
+          <strong>Scripted answer (not AI).</strong> Built from the data on screen, without an AI
+          model, because the AI answer could not be loaded.
+        </p>
+      )}
 
       {ask.status === 'waiting' && (
         <p className={styles.status}>
@@ -48,18 +77,14 @@ export function AnswerPanel({ onTryAgain }: { onTryAgain: () => void }) {
           <p>
             <strong>Answer interrupted.</strong> {ask.error} The text above may be incomplete.
           </p>
-          <Button variant="secondary" onClick={onTryAgain}>
-            Try again
-          </Button>
+          {actions}
         </div>
       )}
 
       {ask.status === 'error' && (
         <div className={styles.problem}>
           <p>Sorry, the answer could not be loaded. {ask.error}</p>
-          <Button variant="secondary" onClick={onTryAgain}>
-            Try again
-          </Button>
+          {actions}
         </div>
       )}
 

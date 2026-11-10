@@ -61,6 +61,22 @@ export async function getJson<T>(
   }
 }
 
+/** The server's own message from a JSON error body, or a generic one. */
+async function serverMessage(response: Response): Promise<string> {
+  try {
+    const body: unknown = await response.json();
+    if (typeof body === 'object' && body !== null && 'message' in body) {
+      const { message } = body;
+      if (typeof message === 'string' && message.length > 0 && message.length < 300) {
+        return message;
+      }
+    }
+  } catch {
+    // Not JSON: fall through to the generic message.
+  }
+  return `The server replied with status ${response.status}.`;
+}
+
 /**
  * POSTs JSON and returns a reader for the streamed response body.
  * Failures before the stream opens become ApiErrors, like getJson.
@@ -84,11 +100,8 @@ export async function postForStream(
   }
 
   if (!response.ok) {
-    throw new ApiError(
-      'http',
-      `The server replied with status ${response.status}.`,
-      response.status,
-    );
+    // The proxy sends a short, safe message (for example "Too many questions").
+    throw new ApiError('http', await serverMessage(response), response.status);
   }
   if (!response.body) {
     throw new ApiError('invalid-response', 'The server sent no answer stream.');

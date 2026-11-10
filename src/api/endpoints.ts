@@ -19,8 +19,10 @@ export function fetchBenefits(
 export function openAskStream(
   request: AskRequest,
   signal?: AbortSignal,
+  scripted = false,
 ): Promise<ReadableStreamDefaultReader<Uint8Array>> {
-  return postForStream('/api/ask', request, signal);
+  // The scripted answer is served in the browser (MSW), in both run modes.
+  return postForStream(scripted ? '/api/ask?mode=scripted' : '/api/ask', request, signal);
 }
 
 export function fetchCompanies(signal?: AbortSignal): Promise<Company[]> {

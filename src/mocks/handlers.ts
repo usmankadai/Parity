@@ -73,7 +73,10 @@ export const handlers: HttpHandler[] = [
       return HttpResponse.json({ message: validation.message }, { status: 400 });
     }
 
-    const scenario = getScenario();
+    // The scripted fallback (after the real AI failed) always answers normally:
+    // a demo scenario left in storage must not break it.
+    const scripted = new URL(request.url).searchParams.get('mode') === 'scripted';
+    const scenario = scripted ? 'normal' : getScenario();
     if (scenario === 'server-error') {
       return HttpResponse.json({ message: 'Mock server error' }, { status: 500 });
     }

@@ -23,6 +23,8 @@ export interface AskState {
   sourcesReceived: boolean;
   error: string | null;
   retry: RetryProgress | null;
+  /** True when the answer is scripted (not AI), as a fallback after the AI failed. */
+  scripted: boolean;
 }
 
 const initialState: AskState = {
@@ -33,6 +35,7 @@ const initialState: AskState = {
   sourcesReceived: false,
   error: null,
   retry: null,
+  scripted: false,
 };
 
 export const askSlice = createSlice({
@@ -45,6 +48,10 @@ export const askSlice = createSlice({
     },
     questionSubmitted(state, action: PayloadAction<string>) {
       return { ...initialState, question: action.payload, status: 'waiting' };
+    },
+    /** Asks the last question again, answered by the script instead of the AI. */
+    scriptedFallbackRequested(state) {
+      return { ...initialState, question: state.question, status: 'waiting', scripted: true };
     },
     retrying(state, action: PayloadAction<RetryProgress>) {
       state.retry = action.payload;

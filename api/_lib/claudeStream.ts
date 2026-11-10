@@ -12,7 +12,9 @@ const FALLBACK_MODELS = new Set([
 /**
  * Streams one answer from Claude and yields its text, then how it ended.
  *
- * - The system prompt is identical on every request, so it is cached.
+ * - The system prompt is identical on every request and marked for caching,
+ *   though at a few hundred tokens it is probably below the minimum length
+ *   the API caches, so the saving is small or none.
  * - Effort is low: these are short answers from data in the prompt.
  * - max_tokens is a deliberate cap on cost and length for a public demo; the
  *   prompt asks for answers under about 150 words.

@@ -53,7 +53,7 @@ Below the table, ask a question. It is sent with the rows on screen, the answer 
 - **Retries happen only before the first words arrive.** After that, a failure marks the answer as interrupted and offers Try again, so text is never repeated or mixed ([ADR 0004](docs/decisions/0004-retry-only-before-the-first-chunk.md)).
 - **Citations are checked:** a chip only appears for a row that was actually sent.
 
-In the public demo, answers are scripted from the rows sent, so they can never invent a figure. **Real mode** sends the question to an AI model through a small server-side proxy that keeps the API key secret, checks every request, rate limits each visitor, and drops any citation that was not in the data sent ([ADR 0007](docs/decisions/0007-real-ai-mode.md)).
+In the public demo, answers are scripted from the rows sent, so they can never invent a figure. **Real mode** sends the question to an AI model through a small server-side proxy that keeps the API key secret, checks every request, rate limits each visitor, and drops any citation that was not in the data sent ([ADR 0007](docs/decisions/0007-real-ai-mode.md)). If the AI can't answer (an outage, the rate limit, no credit), the answer offers **"Show a scripted answer instead"**, clearly labelled as not AI.
 
 ### Try the failure handling
 

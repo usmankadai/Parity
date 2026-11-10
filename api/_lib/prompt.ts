@@ -8,8 +8,8 @@ import { normalise, normaliseAmount } from '../../src/features/comparison/normal
 import { COUNTRY_NAMES } from '../../src/api/countryNames.js';
 
 /**
- * The same for every request, so it is cached (see handleAsk). Never put
- * request data, dates or IDs in here: any change would break the cache.
+ * The same for every request (and marked for caching). Never put request
+ * data, dates or IDs in here: they belong in the user message.
  */
 export const SYSTEM_PROMPT = `You answer questions for a Reward Director comparing employee benefits across countries, in a tool called Parity.
 

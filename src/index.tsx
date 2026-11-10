@@ -11,8 +11,9 @@ import './styles/global.css';
 
 /**
  * Starts MSW. In mock mode it serves every /api call. In real mode it still
- * serves the static data (countries, benefits, companies), but lets
- * /api/ask through to the serverless proxy, which calls the real model.
+ * serves the static data (countries, benefits, companies) and scripted
+ * fallback answers, but lets /api/ask through to the serverless proxy, which
+ * calls the real model.
  */
 async function startMockApi(apiMode: ApiMode) {
   // Dynamic imports keep MSW out of the main bundle.
@@ -21,7 +22,13 @@ async function startMockApi(apiMode: ApiMode) {
     import('msw'),
   ]);
   if (apiMode === 'real') {
-    worker.use(http.post('*/api/ask', () => passthrough()));
+    // Real questions go to the proxy. Scripted fallbacks fall through to the
+    // mock handler (returning nothing passes the request to the next handler).
+    worker.use(
+      http.post('*/api/ask', ({ request }) =>
+        new URL(request.url).searchParams.get('mode') === 'scripted' ? undefined : passthrough(),
+      ),
+    );
   }
   await worker.start({ onUnhandledRequest: 'bypass', quiet: true });
 }

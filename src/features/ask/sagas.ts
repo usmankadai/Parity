@@ -18,7 +18,11 @@ const NO_DATA_MESSAGE = 'Compare at least 2 countries first, so there is data to
  * a retry would repeat or mix text, so a failure marks the answer as
  * interrupted instead (ADR 0004).
  */
-export function* streamAnswer(request: AskRequest, retry: RetryOptions = DEFAULT_RETRY) {
+export function* streamAnswer(
+  request: AskRequest,
+  retry: RetryOptions = DEFAULT_RETRY,
+  scripted = false,
+) {
   // Statutory and company rows: the only IDs an answer may cite.
   const sentRowIds = citableIds(request);
   const controller = new AbortController();
@@ -28,7 +32,7 @@ export function* streamAnswer(request: AskRequest, retry: RetryOptions = DEFAULT
   try {
     for (let attempt = 1; ; attempt++) {
       try {
-        const reader = yield* typedCall(openAskStream, request, controller.signal);
+        const reader = yield* typedCall(openAskStream, request, controller.signal, scripted);
         channel = sseChannel(reader);
 
         // eventChannel: take the stream one message at a time.
@@ -85,7 +89,16 @@ export function* streamAnswer(request: AskRequest, retry: RetryOptions = DEFAULT
   }
 }
 
-export function* askQuestion(action: PayloadAction<string>, retry: RetryOptions = DEFAULT_RETRY) {
+export function* askQuestion(
+  action: PayloadAction<string> | PayloadAction<undefined>,
+  retry: RetryOptions = DEFAULT_RETRY,
+) {
+  // A scripted fallback asks the last question again, answered by the script.
+  const scripted = action.type === askActions.scriptedFallbackRequested.type;
+  const question = scripted
+    ? yield* typedSelect((state) => state.ask.question)
+    : (action.payload ?? '');
+
   // select: send the rows on screen, so the answer can only use that data.
   const context = yield* typedSelect(selectAskContext);
   if (context.rows.length === 0) {
@@ -95,7 +108,7 @@ export function* askQuestion(action: PayloadAction<string>, retry: RetryOptions 
 
   // race: whichever happens first wins, and the other is cancelled.
   const result = yield* typedRace<{ finished: unknown; stopped: unknown }>({
-    finished: call(streamAnswer, { question: action.payload, ...context }, retry),
+    finished: call(streamAnswer, { question, ...context }, retry, scripted),
     stopped: take(askActions.stopRequested.type),
   });
 
@@ -106,5 +119,9 @@ export function* askQuestion(action: PayloadAction<string>, retry: RetryOptions 
 
 export function* askSaga() {
   // takeLatest: a new question cancels the one still streaming.
-  yield takeLatest(askActions.questionSubmitted.type, askQuestion);
+  // A scripted fallback is a new request too, so it also cancels anything streaming.
+  yield takeLatest(
+    [askActions.questionSubmitted.type, askActions.scriptedFallbackRequested.type],
+    askQuestion,
+  );
 }

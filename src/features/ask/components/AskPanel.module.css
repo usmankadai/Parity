@@ -170,3 +170,18 @@
   background: var(--brand-wash);
   color: var(--brand);
 }
+
+.problemActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+}
+
+.scriptedNote {
+  font-size: var(--text-s);
+  margin: 0 0 var(--gap-s);
+  padding: var(--gap-xs) var(--gap-s);
+  border-radius: var(--r-m);
+  background: var(--paper);
+  border: 1px dashed var(--line-strong);
+}
