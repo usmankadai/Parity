@@ -1,5 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
-import type { ModelEvent, ModelRequest } from './handleAsk';
+import type { ModelEvent, ModelRequest } from './handleAsk.js';
 
 /** Models that accept server-side refusal fallbacks in the "default" form. */
 const FALLBACK_MODELS = new Set([

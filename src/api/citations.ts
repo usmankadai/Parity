@@ -1,5 +1,5 @@
-import { companyBenefitId, companyFigureId } from './companyIds';
-import type { AskRequest } from './types';
+import { companyBenefitId, companyFigureId } from './companyIds.js';
+import type { AskRequest } from './types.js';
 
 /**
  * Every row ID an answer may cite: the statutory rows sent, and the company's

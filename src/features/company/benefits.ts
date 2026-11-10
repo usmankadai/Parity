@@ -1,4 +1,4 @@
-import type { CompanyBenefitId } from '../../api/types';
+import type { CompanyBenefitId } from '../../api/types.js';
 
 export interface CompanyBenefitCategory {
   id: CompanyBenefitId;

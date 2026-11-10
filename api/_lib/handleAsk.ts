@@ -1,9 +1,9 @@
-import { validateAskRequest } from '../../src/api/askValidation';
-import { citableIds } from '../../src/api/citations';
-import type { AskRequest, AskStreamEvent } from '../../src/api/types';
-import { clientIp } from './rateLimit';
-import { buildUserMessage, SYSTEM_PROMPT } from './prompt';
-import { createSourcesSplitter } from './sourcesSplitter';
+import { validateAskRequest } from '../../src/api/askValidation.js';
+import { citableIds } from '../../src/api/citations.js';
+import type { AskRequest, AskStreamEvent } from '../../src/api/types.js';
+import { clientIp } from './rateLimit.js';
+import { buildUserMessage, SYSTEM_PROMPT } from './prompt.js';
+import { createSourcesSplitter } from './sourcesSplitter.js';
 
 /** What the model call yields: pieces of answer text, then how it ended. */
 export type ModelEvent =

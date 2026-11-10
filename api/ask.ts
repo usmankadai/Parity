@@ -1,6 +1,6 @@
-import { streamFromClaude } from './_lib/claudeStream';
-import { handleAsk } from './_lib/handleAsk';
-import { createRateLimiter } from './_lib/rateLimit';
+import { streamFromClaude } from './_lib/claudeStream.js';
+import { handleAsk } from './_lib/handleAsk.js';
+import { createRateLimiter } from './_lib/rateLimit.js';
 
 /**
  * POST /api/ask on Vercel (real mode only). Reads ANTHROPIC_API_KEY and

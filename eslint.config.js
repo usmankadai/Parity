@@ -8,7 +8,7 @@ import tseslint from 'typescript-eslint';
 // ESLint needs a default export from its config file.
 // eslint-disable-next-line no-restricted-syntax
 export default tseslint.config(
-  { ignores: ['dist', 'coverage', 'public/mockServiceWorker.js'] },
+  { ignores: ['dist', 'coverage', 'public/mockServiceWorker.js', '.api-check'] },
   js.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   {

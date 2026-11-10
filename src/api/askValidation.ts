@@ -1,6 +1,6 @@
-import { ASK_LIMITS, type AskCompanyContext, type AskRequest, type CountryCode } from './types';
-import { isCountryCode, isRecord, parseBenefitRows } from './validate';
-import { parseCompanyBenefit, parseCompanyFigure, SLUG } from './validateCompany';
+import { ASK_LIMITS, type AskCompanyContext, type AskRequest, type CountryCode } from './types.js';
+import { isCountryCode, isRecord, parseBenefitRows } from './validate.js';
+import { parseCompanyBenefit, parseCompanyFigure, SLUG } from './validateCompany.js';
 
 export type AskValidation = { ok: true; request: AskRequest } | { ok: false; message: string };
 

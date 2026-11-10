@@ -1,5 +1,5 @@
-import type { BenefitRow, SourceUnit } from '../../api/types';
-import type { DisplayUnit } from './categories';
+import type { BenefitRow, SourceUnit } from '../../api/types.js';
+import type { DisplayUnit } from './categories.js';
 
 /**
  * How many weeks one unit of each duration is worth.

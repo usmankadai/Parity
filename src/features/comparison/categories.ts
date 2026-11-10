@@ -1,4 +1,4 @@
-import type { CategoryId } from '../../api/types';
+import type { CategoryId } from '../../api/types.js';
 
 /** What a normalised figure measures, which decides how it is converted and shown. */
 export type DisplayUnit = 'working-days' | 'weeks' | 'days' | 'percent';

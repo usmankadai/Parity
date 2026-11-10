@@ -1,4 +1,4 @@
-import type { CategoryId, CompanyBenefitId, CountryCode } from './types';
+import type { CategoryId, CompanyBenefitId, CountryCode } from './types.js';
 
 /** Citation ID for a company's figure, for example "northwind-IE-notice-period". */
 export function companyFigureId(companyId: string, countryCode: CountryCode, category: CategoryId) {

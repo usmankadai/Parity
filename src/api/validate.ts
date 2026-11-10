@@ -6,7 +6,7 @@ import {
   type BenefitRow,
   type CountryCode,
   type Country,
-} from './types';
+} from './types.js';
 
 /** Thrown when a response does not have the shape the app expects. */
 export class InvalidResponseError extends Error {

@@ -32,6 +32,8 @@ jobs:
       - run: npm run build
       - name: Check the browser bundle has no API keys
         run: npm run check:secrets
+      - name: Check the AI proxy loads in plain Node
+        run: npm run check:api
       - name: Audit dependencies
         run: npm audit --audit-level=high
 

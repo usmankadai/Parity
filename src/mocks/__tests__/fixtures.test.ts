@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { COUNTRY_NAMES } from '../../api/countryNames';
 import { CATEGORY_IDS, COUNTRY_CODES } from '../../api/types';
 import { parseBenefitRows, parseCountries } from '../../api/validate';
 import { CATEGORIES } from '../../features/comparison/categories';
@@ -20,6 +21,12 @@ const OFFICIAL_HOSTS = [
 const rows = parseBenefitRows(benefitsJson);
 
 describe('countries fixture', () => {
+  it('matches the country names the server uses', () => {
+    for (const country of parseCountries(countriesJson)) {
+      expect(COUNTRY_NAMES[country.code]).toBe(country.name);
+    }
+  });
+
   it('lists every supported country once', () => {
     const codes = parseCountries(countriesJson).map((country) => country.code);
     expect([...codes].sort()).toEqual([...COUNTRY_CODES].sort());

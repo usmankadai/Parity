@@ -16,9 +16,10 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.api.json",
     "brand:images": "node scripts/brand-images.ts",
-    "check:secrets": "node scripts/check-bundle-secrets.ts"
+    "check:secrets": "node scripts/check-bundle-secrets.ts",
+    "check:api": "node scripts/smoke-api.ts"
   },
   "msw": {
     "workerDirectory": [

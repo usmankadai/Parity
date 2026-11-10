@@ -1,0 +1,14 @@
+{
+  // The AI proxy runs in Node on Vercel, where each file is compiled on its
+  // own (no bundler). Node's own module rules apply, so relative imports need
+  // explicit .js extensions. This check enforces that for every file the
+  // function loads; the main tsconfig uses bundler resolution for the app.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "noEmit": true
+  },
+  "include": ["api"],
+  "exclude": ["api/**/__tests__"]
+}

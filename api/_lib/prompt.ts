@@ -1,11 +1,11 @@
-import { companyBenefitId, companyFigureId } from '../../src/api/companyIds';
-import type { AskRequest, BenefitRow } from '../../src/api/types';
-import { COMPANY_BENEFITS } from '../../src/features/company/benefits';
-import { compareToMinimum, GAP_LABELS } from '../../src/features/company/gap';
-import { CATEGORIES } from '../../src/features/comparison/categories';
-import { formatMeasure } from '../../src/features/comparison/format';
-import { normalise, normaliseAmount } from '../../src/features/comparison/normalise';
-import countries from '../../src/mocks/fixtures/countries.json';
+import { companyBenefitId, companyFigureId } from '../../src/api/companyIds.js';
+import type { AskRequest, BenefitRow, CountryCode } from '../../src/api/types.js';
+import { COMPANY_BENEFITS } from '../../src/features/company/benefits.js';
+import { compareToMinimum, GAP_LABELS } from '../../src/features/company/gap.js';
+import { CATEGORIES } from '../../src/features/comparison/categories.js';
+import { formatMeasure } from '../../src/features/comparison/format.js';
+import { normalise, normaliseAmount } from '../../src/features/comparison/normalise.js';
+import { COUNTRY_NAMES } from '../../src/api/countryNames.js';
 
 /**
  * The same for every request, so it is cached (see handleAsk). Never put
@@ -22,7 +22,7 @@ Rules:
 - This is not legal or HR advice. Say so in one short sentence at the end when the answer is about legal minimums.
 - After the answer, on its own line, list the IDs of every data item you relied on, exactly as given, like this: <sources>GB-annual-leave,northwind-GB-annual-leave</sources>. Cite only IDs that appear in the data. If you relied on none, write <sources></sources>.`;
 
-const countryName = (code: string) => countries.find((c) => c.code === code)?.name ?? code;
+const countryName = (code: CountryCode) => COUNTRY_NAMES[code];
 
 function statutoryItem(row: BenefitRow) {
   const category = CATEGORIES.find((c) => c.id === row.category);

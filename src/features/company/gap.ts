@@ -1,4 +1,4 @@
-import type { BenefitStatus } from '../../api/types';
+import type { BenefitStatus } from '../../api/types.js';
 
 /**
  * How a company's figure compares with the legal minimum.

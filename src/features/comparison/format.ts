@@ -1,4 +1,4 @@
-import type { DisplayUnit } from './categories';
+import type { DisplayUnit } from './categories.js';
 
 const numberFormat = new Intl.NumberFormat('en-GB', { maximumFractionDigits: 1 });
 

@@ -6,7 +6,7 @@ import {
   type CompanyBenefit,
   type CompanyFigure,
   type CountryCode,
-} from './types';
+} from './types.js';
 import {
   InvalidResponseError,
   isCountryCode,
@@ -14,7 +14,7 @@ import {
   isRecord,
   requireArray,
   requireString,
-} from './validate';
+} from './validate.js';
 
 const HEX_COLOUR = /^#[0-9a-f]{6}$/i;
 export const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
