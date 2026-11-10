@@ -1,0 +1,157 @@
+{
+  "id": "harbourside",
+  "name": "Harbourside Retail",
+  "industry": "High street retail",
+  "theme": {
+    "brand": "#9b1c46",
+    "brandWash": "#fbeef2"
+  },
+  "countries": [
+    {
+      "code": "GB",
+      "headcount": 640
+    },
+    {
+      "code": "NL",
+      "headcount": 210
+    }
+  ],
+  "figures": [
+    {
+      "countryCode": "GB",
+      "category": "annual-leave",
+      "amount": 28,
+      "unit": "working-days-5",
+      "summary": "28 days, with bank holidays counted within them"
+    },
+    {
+      "countryCode": "GB",
+      "category": "public-holidays",
+      "amount": 0,
+      "unit": "days",
+      "summary": "Bank holidays are normal trading days, counted within the 28 days"
+    },
+    {
+      "countryCode": "GB",
+      "category": "maternity-leave",
+      "amount": 52,
+      "unit": "weeks",
+      "summary": "52 weeks, with Statutory Maternity Pay only"
+    },
+    {
+      "countryCode": "GB",
+      "category": "paternity-leave",
+      "amount": 2,
+      "unit": "weeks",
+      "summary": "2 weeks, with Statutory Paternity Pay only"
+    },
+    {
+      "countryCode": "GB",
+      "category": "sick-pay",
+      "amount": 28,
+      "unit": "weeks",
+      "summary": "Statutory Sick Pay only"
+    },
+    {
+      "countryCode": "GB",
+      "category": "pension",
+      "amount": 3,
+      "unit": "percent",
+      "summary": "3% of qualifying earnings (the auto-enrolment minimum)"
+    },
+    {
+      "countryCode": "GB",
+      "category": "notice-period",
+      "amount": 2,
+      "unit": "weeks",
+      "summary": "2 weeks after 2 years' service"
+    },
+    {
+      "countryCode": "NL",
+      "category": "annual-leave",
+      "amount": 18,
+      "unit": "working-days-5",
+      "summary": "18 days (the contract was written for a 4.5-day week)"
+    },
+    {
+      "countryCode": "NL",
+      "category": "public-holidays",
+      "amount": 4,
+      "unit": "days",
+      "summary": "4 public holidays off, as set out in the contract"
+    },
+    {
+      "countryCode": "NL",
+      "category": "maternity-leave",
+      "amount": 16,
+      "unit": "weeks",
+      "summary": "16 weeks"
+    },
+    {
+      "countryCode": "NL",
+      "category": "paternity-leave",
+      "amount": 6,
+      "unit": "weeks",
+      "summary": "1 week at full pay, then 5 weeks at the UWV rate of 70%"
+    },
+    {
+      "countryCode": "NL",
+      "category": "sick-pay",
+      "amount": 104,
+      "unit": "weeks",
+      "summary": "70% for up to 2 years, topped up to the minimum wage in the first year"
+    },
+    {
+      "countryCode": "NL",
+      "category": "pension",
+      "amount": null,
+      "unit": null,
+      "summary": "Through the retail sector's compulsory pension fund"
+    },
+    {
+      "countryCode": "NL",
+      "category": "notice-period",
+      "amount": 1,
+      "unit": "months",
+      "summary": "1 month"
+    }
+  ],
+  "benefits": [
+    {
+      "countryCode": "GB",
+      "benefit": "private-health",
+      "provided": false,
+      "summary": "Not offered"
+    },
+    {
+      "countryCode": "NL",
+      "benefit": "private-health",
+      "provided": false,
+      "summary": "Not offered"
+    },
+    {
+      "countryCode": "GB",
+      "benefit": "wellbeing-allowance",
+      "provided": true,
+      "summary": "£20 a month towards a gym"
+    },
+    {
+      "countryCode": "NL",
+      "benefit": "wellbeing-allowance",
+      "provided": true,
+      "summary": "€20 a month towards a gym"
+    },
+    {
+      "countryCode": "GB",
+      "benefit": "employee-assistance",
+      "provided": true,
+      "summary": "Free, confidential support line, 24 hours a day"
+    },
+    {
+      "countryCode": "NL",
+      "benefit": "employee-assistance",
+      "provided": false,
+      "summary": "Not offered"
+    }
+  ]
+}

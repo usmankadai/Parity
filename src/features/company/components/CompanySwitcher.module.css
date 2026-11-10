@@ -1,0 +1,22 @@
+.switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+.label {
+  font-size: var(--text-s);
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+.select {
+  font: inherit;
+  font-weight: 600;
+  min-height: 2.25rem;
+  padding: var(--gap-2xs) var(--gap-l) var(--gap-2xs) var(--gap-xs);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-m);
+  background: var(--panel);
+  color: var(--ink);
+}

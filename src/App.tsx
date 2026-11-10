@@ -6,7 +6,9 @@ import { ScenarioSwitcher } from './devtools/ScenarioSwitcher';
 import { AskPanel, ASK_SECTION_ID } from './features/ask/components/AskPanel';
 import { ComparisonSection } from './features/comparison/components/ComparisonSection';
 import { CountryPicker } from './features/countries/components/CountryPicker';
-import { selectSelectedCompany } from './features/company/selectors';
+import { CompanySwitcher } from './features/company/components/CompanySwitcher';
+import { selectCompanyState, selectSelectedCompany } from './features/company/selectors';
+import { useCompanyTheme } from './features/company/useCompanyTheme';
 import { companyActions } from './features/company/slice';
 import { countriesActions } from './features/countries/slice';
 import styles from './App.module.css';
@@ -21,6 +23,8 @@ export function App() {
   const dispatch = useAppDispatch();
   const apiMode = useAppSelector(selectApiMode);
   const company = useAppSelector(selectSelectedCompany);
+  const companyCount = useAppSelector(selectCompanyState).items.length;
+  useCompanyTheme(company);
 
   useEffect(() => {
     dispatch(countriesActions.loadRequested());
@@ -36,7 +40,9 @@ export function App() {
             <span className={styles.wordmark}>Parity</span>
           </span>
           <span className={styles.tagline}>
-            {company ? (
+            {companyCount > 1 ? (
+              <CompanySwitcher />
+            ) : company ? (
               <>
                 {company.name} <span className={styles.fictional}>(fictional)</span>
               </>

@@ -27,6 +27,14 @@ export const comparisonSlice = createSlice({
   name: 'comparison',
   initialState,
   reducers: {
+    /** Back to nothing compared (for example after switching company). Loaded rows are kept. */
+    cleared(state) {
+      state.selected = [];
+      state.draft = [];
+      state.status = 'idle';
+      state.error = null;
+      state.retry = null;
+    },
     draftChanged(state, action: PayloadAction<CountryCode[]>) {
       state.draft = action.payload;
     },

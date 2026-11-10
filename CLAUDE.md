@@ -304,7 +304,7 @@ Write short ADRs in `docs/decisions/` as decisions are made. Each is one page at
   - ADR 0005: Workspace layout and visual identity (done).
   - ADR 0006: Company view and gap rules. Milestone 6 (done).
   - ADR 0007: Real AI mode and checking citations in the proxy. Milestone 7 (done).
-  - ADR 0008: Per-company branding. Milestone 9.
+  - ADR 0008: Per-company branding from config. Milestone 9 (done).
 
 ## Milestones
 
@@ -321,6 +321,8 @@ The work is split in two phases. **Phase 1 is enough to apply with and talk thro
 ### Phase 2: a company's Reward Director
 
 Inspired by feedback that the tool should be about one company's package, not abstract minimums. Built in this order:
+
+Milestones 6 to 9 are done; 10 remains.
 
 6. **Company view:** the company data model and API, gap logic, the company table with summary and view toggle, company-only benefits, and Ask over company data. ADR on the company data model and gap rules.
 7. **Real mode:** the serverless proxy with validation, the sources splitter and citation check (statutory and company row IDs), rate limiting, the env-based switch, and the bundle secret check in CI.

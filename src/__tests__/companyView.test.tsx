@@ -172,3 +172,42 @@ describe('what if', () => {
     ).toHaveValue(5);
   });
 });
+
+describe('switching company', () => {
+  it('re-themes the workspace and starts a fresh comparison for the new company', async () => {
+    const user = await openCompanyView();
+    expect(document.documentElement.style.getPropertyValue('--brand')).toBe('#2340cc');
+
+    await user.click(
+      screen.getByRole('button', { name: 'Compare all Northwind Logistics countries' }),
+    );
+    await screen.findByRole('table');
+
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: 'Company' }),
+      'Harbourside Retail (fictional)',
+    );
+
+    // The comparison starts again, because Harbourside works in other countries.
+    expect(screen.queryByRole('table')).not.toBeInTheDocument();
+    expect(document.documentElement.style.getPropertyValue('--brand')).toBe('#9b1c46');
+    expect(screen.getByText(/850 employees in 2 countries/)).toBeInTheDocument();
+
+    await user.click(
+      screen.getByRole('button', { name: 'Compare all Harbourside Retail countries' }),
+    );
+    const table = await screen.findByRole('table');
+    expect(
+      within(table)
+        .getAllByRole('columnheader')
+        .map((th) => th.textContent),
+    ).toEqual(['Benefit', 'United Kingdom', 'Netherlands']);
+    expect(
+      screen.getByRole('heading', { name: '1 gap below the legal minimum' }),
+    ).toBeInTheDocument();
+    const [, nlLeave] = cellsFor(/^Annual leave/);
+    expect(nlLeave).toHaveTextContent('Below minimum (non-compliant)');
+
+    await expectNoAxeViolations(document.body);
+  });
+});

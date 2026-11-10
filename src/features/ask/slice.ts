@@ -39,6 +39,10 @@ export const askSlice = createSlice({
   name: 'ask',
   initialState,
   reducers: {
+    /** Forget the last question and answer (for example after switching company). */
+    cleared() {
+      return initialState;
+    },
     questionSubmitted(state, action: PayloadAction<string>) {
       return { ...initialState, question: action.payload, status: 'waiting' };
     },

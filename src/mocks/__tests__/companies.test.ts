@@ -3,6 +3,7 @@ import { CATEGORY_IDS, COMPANY_BENEFIT_IDS } from '../../api/types';
 import { parseCompanies } from '../../api/validateCompany';
 import { CATEGORIES } from '../../features/comparison/categories';
 import { normaliseAmount } from '../../features/comparison/normalise';
+import { contrastRatio } from '../../styles/contrast';
 import { companies as raw } from '../fixtures/companies';
 
 const companies = parseCompanies(raw);
@@ -85,5 +86,23 @@ describe('parseCompanies', () => {
       ]),
     ).toThrow(/amount/);
     expect(() => parseCompanies([base, base])).toThrow(/repeated/);
+  });
+});
+
+describe('company branding', () => {
+  // Every company's colours must keep the page accessible, whatever the config says.
+  it.each(companies.map((company) => [company.name, company] as const))(
+    '%s colours meet the contrast rules',
+    (_name, { theme }) => {
+      // White text on brand buttons, and brand text on white, the page background and the wash.
+      expect(contrastRatio('#ffffff', theme.brand)).toBeGreaterThanOrEqual(4.5);
+      expect(contrastRatio(theme.brand, '#f4f5f7')).toBeGreaterThanOrEqual(4.5);
+      expect(contrastRatio(theme.brand, theme.brandWash)).toBeGreaterThanOrEqual(4.5);
+    },
+  );
+
+  it('checks contrast correctly', () => {
+    expect(contrastRatio('#000000', '#ffffff')).toBeCloseTo(21, 0);
+    expect(contrastRatio('#777777', '#ffffff')).toBeLessThan(4.5);
   });
 });

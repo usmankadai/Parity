@@ -31,7 +31,9 @@ Parity opens on **Northwind Logistics**, a fictional freight company with 2,790 
 - "Legal minimums only" switches back to the plain comparison between countries.
 - **What if:** switch on "Try changes (what if)", type a new figure (for example 2 weeks of Irish notice) and the gaps and summary update as you type. Edits are saved in your browser by a debounced saga, checked when they are read back, and "Reset to company package" undoes them.
 
-The company and its figures are fictional and labelled that way. The rules for comparing them are in [ADR 0006](docs/decisions/0006-company-view-and-gap-rules.md).
+**A second company, its own branding.** Switch to **Harbourside Retail** (fictional, 850 staff in the UK and the Netherlands) in the top bar and the whole workspace re-themes from its config, with a different package and one gap: Dutch annual leave written for a 4.5-day week. Each company's colours must pass a contrast test before it can ship ([ADR 0008](docs/decisions/0008-per-company-branding.md)).
+
+The companies and their figures are fictional and labelled that way. The rules for comparing them are in [ADR 0006](docs/decisions/0006-company-view-and-gap-rules.md).
 
 ### Compare legal minimums between countries
 
@@ -80,6 +82,7 @@ Components never call `fetch`. They dispatch actions, and sagas do the I/O.
 | `eventChannel` (buffered)       | The streamed answer                          | Turns the stream into actions; the buffer keeps events that arrive together.           |
 | Backoff loop with `delay`       | Data loading, and Ask before its first chunk | Exponential backoff with jitter; stops early on errors that will not get better (4xx). |
 | `all`                           | Loading each country's rows                  | Countries load in parallel, each with its own retries.                                 |
+| `debounce`                      | Saving what-if edits                         | Typing "1", "1.5", "2" saves once, after a pause.                                      |
 | `select`                        | Ask, and skipping already-loaded countries   | The answer can only use the data on screen.                                            |
 
 Thunks are turned off (`getDefaultMiddleware({ thunk: false })`), and a test proves it. [ADR 0001](docs/decisions/0001-redux-saga-for-async-flows.md) explains the choice over thunks and RTK Query. Small typed helpers (`src/app/typedEffects.ts`) give each `yield` a real type, so there is no `any`.
@@ -147,6 +150,7 @@ npm run brand:images # regenerate the favicon and link-preview image
 - [ADR 0005: Workspace layout and visual identity](docs/decisions/0005-workspace-layout-and-visual-identity.md)
 - [ADR 0006: Company view and gap rules](docs/decisions/0006-company-view-and-gap-rules.md)
 - [ADR 0007: Real AI mode and checking citations in the proxy](docs/decisions/0007-real-ai-mode.md)
+- [ADR 0008: Per-company branding from config](docs/decisions/0008-per-company-branding.md)
 
 ## Known limitations
 
@@ -167,5 +171,4 @@ I built Parity with Claude Code as a pair programmer, working from a `CLAUDE.md`
 
 ## What's next
 
-- **A second company with its own branding,** switching the whole workspace's theme from config.
 - Lighthouse budgets in CI, and a short demo video.

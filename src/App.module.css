@@ -140,8 +140,12 @@
     padding-right: var(--gap-m);
   }
 
+  /* The company name or switcher gets its own row on small screens. */
   .tagline {
-    display: none;
+    order: 3;
+    flex-basis: 100%;
+    padding-left: 0;
+    border-left: 0;
   }
 
   .main {
