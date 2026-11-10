@@ -11,7 +11,14 @@ function listNames(names: string[]): string {
 }
 
 /** The company's package in each country, laid over the legal minimums. */
-export function CompanyTable({ table }: { table: Table }) {
+export function CompanyTable({
+  table,
+  whatIfCompanyId,
+}: {
+  table: Table;
+  /** Set when what-if editing is on. */
+  whatIfCompanyId: string | null;
+}) {
   const titleId = useId();
   const title = `${table.companyName} against the legal minimums: ${listNames(
     table.countries.map((country) => country.name),
@@ -66,6 +73,11 @@ export function CompanyTable({ table }: { table: Table }) {
                     cell={cell}
                     categoryLabel={category.label}
                     displayUnit={category.displayUnit}
+                    whatIf={
+                      whatIfCompanyId && category.comparable && cell.row
+                        ? { companyId: whatIfCompanyId }
+                        : undefined
+                    }
                   />
                 ))}
               </tr>

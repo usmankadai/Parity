@@ -6,9 +6,12 @@ import { normaliseAmount } from '../comparison/normalise';
 import { selectComparisonTable, type ComparisonCell } from '../comparison/selectors';
 import { COMPANY_BENEFITS, type CompanyBenefitCategory } from './benefits';
 import { compareToMinimum, type Gap } from './gap';
+import { overrideKey } from './whatIfStorage';
 
 export const selectCompanyState = (state: RootState) => state.company;
 export const selectCompanyView = (state: RootState) => state.company.view;
+export const selectWhatIf = (state: RootState) => state.company.whatIf;
+const selectOverrides = (state: RootState) => state.company.overrides;
 
 export const selectSelectedCompany = createSelector(
   [(state: RootState) => state.company.items, (state: RootState) => state.company.selectedId],
@@ -21,8 +24,10 @@ export const selectCompanyViewActive = (state: RootState) =>
 
 export interface CompanyCell extends ComparisonCell {
   figure: CompanyFigure | undefined;
-  /** The company's figure in the category's display unit. */
+  /** The company's figure in the category's display unit (a what-if edit if there is one). */
   companyValue: number | null;
+  /** True when companyValue comes from a what-if edit, not the company's data. */
+  edited: boolean;
   gap: Gap | null;
 }
 
@@ -45,9 +50,10 @@ export interface CompanyTable {
 
 /** The comparison table with the selected company's figures and gaps added. */
 export const selectCompanyTable = createSelector(
-  [selectComparisonTable, selectSelectedCompany],
-  (table, company): CompanyTable | null => {
+  [selectComparisonTable, selectSelectedCompany, selectOverrides],
+  (table, company, overrides): CompanyTable | null => {
     if (!company) return null;
+    const edits = overrides[company.id] ?? {};
 
     const rows = table.rows.map(({ category, cells }) => ({
       category,
@@ -55,12 +61,15 @@ export const selectCompanyTable = createSelector(
         const figure = company.figures.find(
           (f) => f.countryCode === cell.country.code && f.category === category.id,
         );
-        const companyValue =
+        const edit = edits[overrideKey(cell.country.code, category.id)];
+        const fromData =
           figure && figure.amount !== null && figure.unit !== null
             ? normaliseAmount(figure.amount, figure.unit, category.displayUnit, category.id)
             : null;
+        const edited = edit !== undefined;
+        const companyValue = edited ? edit : fromData;
         const gap =
-          cell.row && figure
+          cell.row && (figure || edited)
             ? compareToMinimum({
                 status: cell.row.status,
                 minimum: cell.value,
@@ -68,7 +77,7 @@ export const selectCompanyTable = createSelector(
                 comparable: category.comparable,
               })
             : null;
-        return { ...cell, figure, companyValue, gap };
+        return { ...cell, figure, companyValue, edited, gap };
       }),
     }));
 
@@ -111,3 +120,9 @@ export const selectGapSummary = createSelector([selectCompanyTable], (table) => 
     return { country, below, compared };
   });
 });
+
+/** How many figures the user has edited for the selected company. */
+export const selectEditCount = createSelector(
+  [selectSelectedCompany, selectOverrides],
+  (company, overrides) => (company ? Object.keys(overrides[company.id] ?? {}).length : 0),
+);

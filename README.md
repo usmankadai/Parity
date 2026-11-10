@@ -29,6 +29,7 @@ Parity opens on **Northwind Logistics**, a fictional freight company with 2,790 
 - **Company benefits** with no legal minimum (private health insurance, a gym and wellbeing allowance, an employee assistance programme) have their own section.
 - **Ask** knows the company's figures too: "Where is our package below the legal minimum?" cites both the company's figure and the law it falls short of.
 - "Legal minimums only" switches back to the plain comparison between countries.
+- **What if:** switch on "Try changes (what if)", type a new figure (for example 2 weeks of Irish notice) and the gaps and summary update as you type. Edits are saved in your browser by a debounced saga, checked when they are read back, and "Reset to company package" undoes them.
 
 The company and its figures are fictional and labelled that way. The rules for comparing them are in [ADR 0006](docs/decisions/0006-company-view-and-gap-rules.md).
 
@@ -166,6 +167,5 @@ I built Parity with Claude Code as a pair programmer, working from a `CLAUDE.md`
 
 ## What's next
 
-- **What-if editing:** change a company figure and see the gaps update, saved locally by a debounced saga.
 - **A second company with its own branding,** switching the whole workspace's theme from config.
 - Lighthouse budgets in CI, and a short demo video.

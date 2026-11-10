@@ -6,11 +6,13 @@ import { CompanyOverview } from '../../company/components/CompanyOverview';
 import { CompanyTable } from '../../company/components/CompanyTable';
 import { GapSummary } from '../../company/components/GapSummary';
 import { ViewToggle } from '../../company/components/ViewToggle';
+import { WhatIfControls } from '../../company/components/WhatIfControls';
 import {
   selectCompanyTable,
   selectCompanyViewActive,
   selectGapSummary,
   selectSelectedCompany,
+  selectWhatIf,
 } from '../../company/selectors';
 import { selectCountries } from '../../countries/selectors';
 import type { RetryProgress } from '../../countries/slice';
@@ -55,6 +57,7 @@ export function ComparisonSection() {
   const companyActive = useAppSelector(selectCompanyViewActive);
   const companyTable = useAppSelector(selectCompanyTable);
   const gapSummary = useAppSelector(selectGapSummary);
+  const whatIf = useAppSelector(selectWhatIf);
   const countries = useAppSelector(selectCountries);
   const countryNames = Object.fromEntries(countries.map((c) => [c.code, c.name]));
 
@@ -108,8 +111,12 @@ export function ComparisonSection() {
 
       {status === 'ready' && hasData && companyActive && companyTable && (
         <>
+          <WhatIfControls />
           <GapSummary companyName={companyTable.companyName} summary={gapSummary} />
-          <CompanyTable table={companyTable} />
+          <CompanyTable
+            table={companyTable}
+            whatIfCompanyId={whatIf && company ? company.id : null}
+          />
         </>
       )}
 

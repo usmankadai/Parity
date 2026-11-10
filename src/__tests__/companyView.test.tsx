@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { cleanup, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { App } from '../App';
@@ -102,5 +102,73 @@ describe('company view', () => {
     expect(screen.queryByText(/gaps? below the legal minimum/)).not.toBeInTheDocument();
     expect(screen.getAllByText('Most generous').length).toBeGreaterThan(0);
     expect(screen.queryByText('Private health insurance')).not.toBeInTheDocument();
+  });
+});
+
+describe('what if', () => {
+  async function openWhatIf() {
+    const user = await openCompanyView();
+    await user.click(
+      screen.getByRole('button', { name: 'Compare all Northwind Logistics countries' }),
+    );
+    await screen.findByRole('table');
+    await user.click(screen.getByRole('checkbox', { name: 'Try changes (what if)' }));
+    return user;
+  }
+
+  it('updates the gaps as you type, saves, restores on the next visit, and resets', async () => {
+    const user = await openWhatIf();
+
+    const irishNotice = screen.getByRole('spinbutton', {
+      name: /What if, Ireland, employer notice after 2 years, \(weeks\)/,
+    });
+    expect(irishNotice).toHaveValue(1);
+    await user.clear(irishNotice);
+    await user.type(irishNotice, '2');
+
+    expect(
+      screen.getByRole('heading', { name: '1 gap below the legal minimum' }),
+    ).toBeInTheDocument();
+    const [, ieNotice] = cellsFor(/^Employer notice after 2 years/);
+    expect(ieNotice).toHaveTextContent('Edited (what if)');
+    expect(ieNotice).toHaveTextContent('Meets minimum');
+    expect(screen.getByText('1 figure edited')).toBeInTheDocument();
+    await expectNoAxeViolations(document.body);
+
+    // Saved after a short pause, so a new visit starts with the edit.
+    await waitFor(() => {
+      expect(window.localStorage.getItem('parity:what-if')).toContain('IE-notice-period');
+    });
+    cleanup();
+    await openCompanyView();
+    await userEvent
+      .setup()
+      .click(screen.getByRole('button', { name: 'Compare all Northwind Logistics countries' }));
+    await screen.findByRole('table');
+    expect(
+      screen.getByRole('heading', { name: '1 gap below the legal minimum' }),
+    ).toBeInTheDocument();
+
+    // Reset brings back the company's own figures.
+    const user2 = userEvent.setup();
+    await user2.click(screen.getByRole('checkbox', { name: 'Try changes (what if)' }));
+    await user2.click(screen.getByRole('button', { name: 'Reset to company package' }));
+    expect(
+      screen.getByRole('heading', { name: '2 gaps below the legal minimum' }),
+    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(window.localStorage.getItem('parity:what-if')).toBeNull();
+    });
+  });
+
+  it('only offers inputs for categories that can be compared', async () => {
+    await openWhatIf();
+
+    expect(
+      screen.queryByRole('spinbutton', { name: /United Kingdom, statutory sick pay/ }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('spinbutton', { name: /United Kingdom, employer workplace pension/ }),
+    ).toHaveValue(5);
   });
 });
